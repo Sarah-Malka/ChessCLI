@@ -36,7 +36,7 @@ void Board::PrintBoard() const
 			ChangeColor();
 			if (!board[i][j].occupied)
 			{
-				std::wcout << L"0 ";
+				std::wcout << L"  ";
 				continue;
 			}
 			bool flipColor = ((i + j) % 2 == 0);
