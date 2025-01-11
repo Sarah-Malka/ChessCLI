@@ -3,6 +3,6 @@
 
 namespace VisualUtils
 {
-	wchar_t GetPieceRepresentation(Color color, Piece);
+	wchar_t GetPieceRepresentation(Color color, Piece piece , bool flipColor);
 };
 

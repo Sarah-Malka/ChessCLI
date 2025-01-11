@@ -1,5 +1,8 @@
 #include "board.h"
+#include "VisualUtils.h"
 #include <iostream>
+#include <conio.h>
+#include <Windows.h>
 bool Board::alreadyCreated = false;
 
 Board::Board()
@@ -7,16 +10,41 @@ Board::Board()
 	board = GetInitialState();
 }
 
+void ChangeColor()
+{
+	static bool white = 0;
+	HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+
+	if (!white)
+	{
+		SetConsoleTextAttribute(hStdOut, BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_RED);
+	}
+	else
+	{
+		SetConsoleTextAttribute(hStdOut, FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED);
+
+	}
+	white = !white;
+}
+
 void Board::PrintBoard() const
 {
-
-	for (int i = 0; i < 8; i++)
+	for (int i = 7; i >= 0; i--)
 	{
 		for (int j = 0; j < 8; j++)
 		{
-			std::cout << int(board[i][j].piece) << " ";
+			ChangeColor();
+			if (!board[i][j].occupied)
+			{
+				std::wcout << L"0 ";
+				continue;
+			}
+			bool flipColor = ((i + j) % 2 == 1);
+			wchar_t piece_symbol = VisualUtils::GetPieceRepresentation(board[i][j].color, board[i][j].piece, flipColor);
+			std::wcout << piece_symbol << L" ";
 		}
 		std::cout << std::endl;
+		ChangeColor();
 	}
 }
 
