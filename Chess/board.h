@@ -9,8 +9,6 @@ class Board
 {
 private:
 	array2D board;
-	singleMove lastMove;
-	bool WhiteToPlay = true;
 
 	static bool alreadyCreated;
 	static array2D GetToInitialState();
