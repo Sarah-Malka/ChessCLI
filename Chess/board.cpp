@@ -39,7 +39,7 @@ void Board::PrintBoard() const
 				std::wcout << L"0 ";
 				continue;
 			}
-			bool flipColor = ((i + j) % 2 == 1);
+			bool flipColor = ((i + j) % 2 == 0);
 			wchar_t piece_symbol = VisualUtils::GetPieceRepresentation(board[i][j].color, board[i][j].piece, flipColor);
 			std::wcout << piece_symbol << L" ";
 		}
