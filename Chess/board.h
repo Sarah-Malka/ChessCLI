@@ -12,8 +12,6 @@ private:
 
 	static bool alreadyCreated;
 	static array2D GetToInitialState();
-	bool isValidMove(struct singleMove);
-	singleMove StringToMove(char* move);
 
 public:
 	Board();
