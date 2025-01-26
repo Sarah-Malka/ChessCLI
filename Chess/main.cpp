@@ -2,11 +2,13 @@
 #include "board.h"
 #include <locale>
 #include <cstdlib>
+#include "gameUtils.h"
 
 int main()
 {
     system("chcp 65001 > nul");
     setlocale(LC_ALL, ".UTF-8");
+    GameUtils::squareToCoordinate(L"e4");
 
     wchar_t Notking = L'\u2655';
 
