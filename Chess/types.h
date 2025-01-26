@@ -16,5 +16,5 @@ struct singleMove
 {
 	Coordinate origin;
 	Coordinate destination;
-	Piece* originalPiece;
+	PieceType originalPiece;
 };

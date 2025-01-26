@@ -1,6 +1,6 @@
 #include "GameUtils.h"
 bool lastMoveWasCapture = false;
-Piece pieceForCoronation = PAWN;
+PieceType pieceForCoronation = PAWN;
 
 singleMove GameUtils::stringToMove(std::wstring move)
 {
@@ -12,7 +12,7 @@ singleMove GameUtils::stringToMove(std::wstring move)
 	ret.origin.row = 0;
 	ret.destination.collumn = 0;
 	ret.destination.row = 0;
-	ret.originalPiece = Piece::PAWN;
+	ret.originalPiece = PieceType::PAWN;
 
 	move = removeUnnececeryEnding(move); //do i really need this function at all?
 	if (move.empty())
@@ -23,27 +23,27 @@ singleMove GameUtils::stringToMove(std::wstring move)
 
 	if (move[0] == 'K')
 	{
-		ret.originalPiece = Piece::KING;
+		ret.originalPiece = PieceType::KING;
 		move.erase(0, 1); // erase 1 characters starting with position 0
 	}
 	else if (move[0] == 'Q')
 	{
-		ret.originalPiece = Piece::QUEEN;
+		ret.originalPiece = PieceType::QUEEN;
 		move.erase(0, 1);
 	}
 	else if (move[0] == 'R')
 	{
-		ret.originalPiece = Piece::ROCK;
+		ret.originalPiece = PieceType::ROCK;
 		move.erase(0, 1);
 	}
 	else if (move[0] == 'B')
 	{
-		ret.originalPiece = Piece::BISHOP;
+		ret.originalPiece = PieceType::BISHOP;
 		move.erase(0, 1);
 	}
 	else if (move[0] == 'N')
 	{
-		ret.originalPiece = Piece::KNIGHT; // all legit so far
+		ret.originalPiece = PieceType::KNIGHT; // all legit so far
 		move.erase(0, 1);
 	}
 
