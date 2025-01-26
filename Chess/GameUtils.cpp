@@ -1,9 +1,10 @@
 #include "GameUtils.h"
+bool lastMoveWasCapture = false;
+Piece pieceForCoronation = PAWN;
 
 singleMove GameUtils::stringToMove(std::wstring move)
 {
-	move = removeUnnececeryEnding(move);
-	
+	// this function returns only destination and . if the input string isn't a move, the function returns an empty move
 
 	// define return var
 	singleMove ret;
@@ -11,11 +12,89 @@ singleMove GameUtils::stringToMove(std::wstring move)
 	ret.origin.row = 0;
 	ret.destination.collumn = 0;
 	ret.destination.row = 0;
+	ret.originalPiece = Piece::PAWN;
+
+	move = removeUnnececeryEnding(move); //do i really need this function at all?
+	if (move.empty())
+	{
+		std::cout << "empty move!" << std::endl;
+		return ret; //this is a way of expressing an error. give player another turn instead.
+	}
+
+	if (move[0] == 'K')
+	{
+		ret.originalPiece = Piece::KING;
+		move.erase(0, 1); // erase 1 characters starting with position 0
+	}
+	else if (move[0] == 'Q')
+	{
+		ret.originalPiece = Piece::QUEEN;
+		move.erase(0, 1);
+	}
+	else if (move[0] == 'R')
+	{
+		ret.originalPiece = Piece::ROCK;
+		move.erase(0, 1);
+	}
+	else if (move[0] == 'B')
+	{
+		ret.originalPiece = Piece::BISHOP;
+		move.erase(0, 1);
+	}
+	else if (move[0] == 'N')
+	{
+		ret.originalPiece = Piece::KNIGHT; // all legit so far
+		move.erase(0, 1);
+	}
+
+	lastMoveWasCapture = false;
+	if (!move.empty() && (move[0] == 'x' || move[0] == 'X'))
+	{
+		move.erase(0, 1); 
+		lastMoveWasCapture = true;
+	}
+	if (move.length() < 2 || move[0] < 'a' || move[0] > 'h' || move[1] < 1 || move[1] > 8) // this will be non legit
+	{
+		ret.originalPiece = PAWN;
+		return ret;
+	}
+	
+	ret.destination.collumn = move[0] - 'a';
+	ret.destination.row = move[1] - '1';
+	move.erase(0, 2);
+	if (move.length() >= 2)
+	{
+		if (move[0] == '=')
+		{
+			if (move[1] == 'Q' || move[1] == 'q')
+			{
+				pieceForCoronation = QUEEN;
+			}
+			else if (move[1] == 'R' || move[1] == 'r')
+			{
+				pieceForCoronation = ROCK;
+			}
+			else if (move[1] == 'B' || move[1] == 'b')
+			{
+				pieceForCoronation = BISHOP;
+			}
+			else if (move[1] == 'N' || move[1] == 'n')
+			{
+				pieceForCoronation = KNIGHT;
+			}
+			else if (move[1] == 'K' || move[1] == 'k')
+			{
+				pieceForCoronation = KING; // just to give a proper error message in case of a pawn trying that.
+			}
+
+		}
+	}
 
 	// find what piece is moving: piece type and color, what piece can get there.
 	// if it ends with "=Q", with "#" or with "+" then handel. before them will be the destination square
 	// maybe unless the moving piece was a pawn, which you can know by seeing if the first letter is capital
 	// if an "x" was out of place but the move was legal, mention that (and ask if sure?)
+	// if queening - need function to change the piece in the destination coordinate, to the premoted piece
 
 	return ret;
 }
@@ -34,9 +113,15 @@ bool GameUtils::isValidMove(struct singleMove)
 
 std::wstring GameUtils::removeUnnececeryEnding(std::wstring move)
 {
-	
-
-	return std::wstring();
+	if (move.empty())
+	{
+		return move;
+	}
+	if (move.back() == '#' || move.back() == '+')
+	{
+		move.pop_back();
+	}
+	return move;
 }
 
 Coordinate GameUtils::squareToCoordinate(std::wstring destinationSquare)

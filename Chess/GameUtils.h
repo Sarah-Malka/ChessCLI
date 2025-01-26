@@ -1,6 +1,7 @@
 #pragma once
 #include "types.h"
 #include <string>
+#include <iostream>
 
 class GameUtils
 {

@@ -2,7 +2,7 @@
 #include "types.h"
 #include "board.h"
 
-class GameInfo
+static class GameInfo
 {
 	Board board;
 	singleMove lastMove;
@@ -18,6 +18,5 @@ class GameInfo
 	bool h8BlackRockMoved = false;
 
 	bool lastMoveWasDoubleMoveByPawn = false;
-
 };
 
