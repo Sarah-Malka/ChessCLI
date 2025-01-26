@@ -1,39 +1,20 @@
 #pragma once
-#include <cstdint>
+#include "basicTypes.h"
+class Piece;
 
-enum Color : uint8_t
-{
-	WHITE = 0,
-	BLACK
-};
 
-enum Piece : uint8_t
-{
-	KING = 0,
-	QUEEN,
-	ROCK,
-	BISHOP,
-	KNIGHT,
-	PAWN
+//struct Square
+//{
+//	bool occupied = false;
+//	Piece* piece;
+//	Square(bool occupied, const std::string& pieceType, const std::string& pieceColor)
+//		: occupied(occupied), piece(new Piece(PieceType::BISHOP, Color::BLACK, 0, 0) {}
+//};
 
-};
-
-struct Square
-{
-	bool occupied = false;
-	Color color;
-	Piece piece;
-};
-
-struct Coordinate
-{
-	uint8_t row;
-	uint8_t collumn;
-};
 
 struct singleMove
 {
 	Coordinate origin;
 	Coordinate destination;
-	Piece originalPiece;
+	Piece* originalPiece;
 };

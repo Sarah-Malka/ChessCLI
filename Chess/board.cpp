@@ -36,14 +36,14 @@ void Board::PrintBoard() const
 		for (int j = 0; j < 8; j++)
 		{
 			ChangeColor();
-			if (!board[i][j].occupied)
+			if (board[i][j] == nullptr)
 			{
 				std::wcout << L"  ";
 				continue;
 			}
 			bool flipColor = ((i + j) % 2 == 0);
-			wchar_t piece_symbol = VisualUtils::GetPieceRepresentation(board[i][j].color, board[i][j].piece, flipColor);
-			std::wcout << piece_symbol << L" ";
+			wchar_t PieceType_symbol = VisualUtils::GetPieceRepresentation(board[i][j]->getColor(), board[i][j]->getType(), flipColor);
+			std::wcout << PieceType_symbol << L" ";
 		}
 		std::cout << std::endl;
 		ChangeColor();
@@ -63,14 +63,14 @@ bool Board::isStalemate()
 array2D Board::GetToInitialState()
 {
 	array2D init = {
-		{{true, Color::WHITE, Piece::ROCK}, { true, Color::WHITE, Piece::KNIGHT }, {true, Color::WHITE, Piece::BISHOP}, { true, Color::WHITE, Piece::QUEEN }, {true, Color::WHITE, Piece::KING}, { true, Color::WHITE, Piece::BISHOP }, {true, Color::WHITE, Piece::KNIGHT}, { true, Color::WHITE, Piece::ROCK }},
-		{{true, Color::WHITE, Piece::PAWN}, { true, Color::WHITE, Piece::PAWN }, {true, Color::WHITE, Piece::PAWN}, { true, Color::WHITE, Piece::PAWN }, {true, Color::WHITE, Piece::PAWN}, { true, Color::WHITE, Piece::PAWN }, {true, Color::WHITE, Piece::PAWN}, { true, Color::WHITE, Piece::PAWN }},
-		{{false}, {false}, {false}, {false}, {false}, {false}, {false}, {false}},
-		{{false}, {false}, {false}, {false}, {false}, {false}, {false}, {false}},
-		{{false}, {false}, {false}, {false}, {false}, {false}, {false}, {false}},
-		{{false}, {false}, {false}, {false}, {false}, {false}, {false}, {false}},
-		{{true, Color::BLACK, Piece::PAWN}, { true, Color::BLACK, Piece::PAWN }, {true, Color::BLACK, Piece::PAWN}, { true, Color::BLACK, Piece::PAWN }, {true, Color::BLACK, Piece::PAWN}, { true, Color::BLACK, Piece::PAWN }, {true, Color::BLACK, Piece::PAWN}, { true, Color::BLACK, Piece::PAWN }},
-		{{true, Color::BLACK, Piece::ROCK}, { true, Color::BLACK, Piece::KNIGHT }, {true, Color::BLACK, Piece::BISHOP}, { true, Color::BLACK, Piece::QUEEN }, {true, Color::BLACK, Piece::KING}, { true, Color::BLACK, Piece::BISHOP }, {true, Color::BLACK, Piece::KNIGHT}, { true, Color::BLACK, Piece::ROCK }}
+		{new Rock(Color::WHITE, 0, 0), new Knight(Color::WHITE, 0, 1), new Bishop(Color::WHITE, 0, 2), new Queen(Color::WHITE, 0, 3), new King(Color::WHITE, 0, 4), new Bishop(Color::WHITE, 0, 5), new Knight(Color::WHITE, 0, 6), new Rock(Color::WHITE, 0, 7)},
+		{new Pawn(Color::WHITE, 1, 0), new Pawn(Color::WHITE, 1, 1), new Pawn(Color::WHITE, 1, 2), new Pawn(Color::WHITE, 1, 3), new Pawn(Color::WHITE, 1, 4), new Pawn(Color::WHITE, 1, 5), new Pawn(Color::WHITE, 1, 6), new Pawn(Color::WHITE, 1, 7)},
+		{nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr},
+		{nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr},
+		{nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr},
+		{nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr},
+		{new Pawn(Color::BLACK, 6, 0), new Pawn(Color::BLACK, 6, 1), new Pawn(Color::BLACK, 6, 2), new Pawn(Color::BLACK, 6, 3), new Pawn(Color::BLACK, 6, 4), new Pawn(Color::BLACK, 6, 5), new Pawn(Color::BLACK, 6, 6), new Pawn(Color::BLACK, 6, 7)},
+		{new Rock(Color::BLACK, 7, 0), new Knight(Color::BLACK, 7, 1), new Bishop(Color::BLACK, 7, 2), new Queen(Color::BLACK, 7, 3), new King(Color::BLACK, 7, 4), new Bishop(Color::BLACK, 7, 5), new Knight(Color::BLACK, 7, 6), new Rock(Color::BLACK, 7, 7)}
 	};
 	return init;
 }

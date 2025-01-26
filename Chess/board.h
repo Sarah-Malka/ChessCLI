@@ -1,8 +1,9 @@
 #pragma once
 #include <vector>
-#include "types.h"
+#include "Piece.h"
+//#include "types.h"
 
-using array2D = std::vector<std::vector<Square>>;
+using array2D = std::vector<std::vector<Piece*>>;
 
 
 class Board
@@ -13,10 +14,10 @@ private:
 	static bool alreadyCreated;
 	static array2D GetToInitialState();
 
-	bool isValidMove(struct singleMove);
+	//bool isValidMove(struct singleMove);
 	static bool isCheckmate();
 	static bool isStalemate();
-	singleMove StringToMove(char* move);
+	//singleMove StringToMove(char* move);
 
 public:
 	Board();
