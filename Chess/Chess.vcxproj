@@ -143,12 +143,15 @@
     <ClCompile Include="GameInfo.cpp" />
     <ClCompile Include="GameUtils.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Piece.cpp" />
     <ClCompile Include="VisualUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="basicTypes.h" />
     <ClInclude Include="board.h" />
     <ClInclude Include="GameInfo.h" />
     <ClInclude Include="GameUtils.h" />
+    <ClInclude Include="Piece.h" />
     <ClInclude Include="types.h" />
     <ClInclude Include="VisualUtils.h" />
   </ItemGroup>

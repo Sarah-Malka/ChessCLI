@@ -1,6 +1,6 @@
 #include "VisualUtils.h"
 
-wchar_t VisualUtils::GetPieceRepresentation(Color color, Piece piece, bool flipColor)
+wchar_t VisualUtils::GetPieceRepresentation(Color color, PieceType piece, bool flipColor)
 {
     auto symbol = L'\u2653' + 1 + piece + 6 * color;
     if (!flipColor )

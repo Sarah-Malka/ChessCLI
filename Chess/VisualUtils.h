@@ -1,8 +1,8 @@
 #pragma once
-#include "types.h"
+#include "basicTypes.h"
 
 namespace VisualUtils
 {
-	wchar_t GetPieceRepresentation(Color color, Piece piece , bool flipColor);
+	wchar_t GetPieceRepresentation(Color color, PieceType piece , bool flipColor);
 };
 
