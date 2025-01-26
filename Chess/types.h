@@ -35,4 +35,5 @@ struct singleMove
 {
 	Coordinate origin;
 	Coordinate destination;
+	Piece originalPiece;
 };
