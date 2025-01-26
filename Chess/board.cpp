@@ -48,6 +48,16 @@ void Board::PrintBoard() const
 	}
 }
 
+bool Board::isCheckmate()
+{
+	return false;
+}
+
+bool Board::isStalemate()
+{
+	return false;
+}
+
 array2D Board::GetToInitialState()
 {
 	array2D init = {

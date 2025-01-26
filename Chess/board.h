@@ -12,7 +12,10 @@ private:
 
 	static bool alreadyCreated;
 	static array2D GetToInitialState();
+
 	bool isValidMove(struct singleMove);
+	static bool isCheckmate();
+	static bool isStalemate();
 	singleMove StringToMove(char* move);
 
 public:
