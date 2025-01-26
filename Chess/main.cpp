@@ -8,7 +8,8 @@ int main()
 {
     system("chcp 65001 > nul");
     setlocale(LC_ALL, ".UTF-8");
-    GameUtils::squareToCoordinate(L"e4");
+
+    singleMove myMove = GameUtils::stringToMove(L"Nf3");
 
     wchar_t Notking = L'\u2655';
 

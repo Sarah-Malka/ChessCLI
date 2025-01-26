@@ -21,68 +21,68 @@ singleMove GameUtils::stringToMove(std::wstring move)
 		return ret; //this is a way of expressing an error. give player another turn instead.
 	}
 
-	if (move[0] == 'K')
+	if (move[0] == L'K')
 	{
 		ret.originalPiece = PieceType::KING;
 		move.erase(0, 1); // erase 1 characters starting with position 0
 	}
-	else if (move[0] == 'Q')
+	else if (move[0] == L'Q')
 	{
 		ret.originalPiece = PieceType::QUEEN;
 		move.erase(0, 1);
 	}
-	else if (move[0] == 'R')
+	else if (move[0] == L'R')
 	{
 		ret.originalPiece = PieceType::ROCK;
 		move.erase(0, 1);
 	}
-	else if (move[0] == 'B')
+	else if (move[0] == L'B')
 	{
 		ret.originalPiece = PieceType::BISHOP;
 		move.erase(0, 1);
 	}
-	else if (move[0] == 'N')
+	else if (move[0] == L'N')
 	{
 		ret.originalPiece = PieceType::KNIGHT; // all legit so far
 		move.erase(0, 1);
 	}
 
 	lastMoveWasCapture = false;
-	if (!move.empty() && (move[0] == 'x' || move[0] == 'X'))
+	if (!move.empty() && (move[0] == L'x' || move[0] == L'X'))
 	{
 		move.erase(0, 1); 
 		lastMoveWasCapture = true;
 	}
-	if (move.length() < 2 || move[0] < 'a' || move[0] > 'h' || move[1] < 1 || move[1] > 8) // this will be non legit
+	if (move.length() < 2 || move[0] < L'a' || move[0] > L'h' || move[1] < L'1' || move[1] > L'8') // this will be non legit
 	{
 		ret.originalPiece = PAWN;
 		return ret;
 	}
 	
-	ret.destination.collumn = move[0] - 'a';
-	ret.destination.row = move[1] - '1';
+	ret.destination.collumn = move[0] - L'a';
+	ret.destination.row = move[1] - L'1';
 	move.erase(0, 2);
 	if (move.length() >= 2)
 	{
-		if (move[0] == '=')
+		if (move[0] == L'=')
 		{
-			if (move[1] == 'Q' || move[1] == 'q')
+			if (move[1] == L'Q' || move[1] == L'q')
 			{
 				pieceForCoronation = QUEEN;
 			}
-			else if (move[1] == 'R' || move[1] == 'r')
+			else if (move[1] == L'R' || move[1] == L'r')
 			{
 				pieceForCoronation = ROCK;
 			}
-			else if (move[1] == 'B' || move[1] == 'b')
+			else if (move[1] == L'B' || move[1] == L'b')
 			{
 				pieceForCoronation = BISHOP;
 			}
-			else if (move[1] == 'N' || move[1] == 'n')
+			else if (move[1] == L'N' || move[1] == L'n')
 			{
 				pieceForCoronation = KNIGHT;
 			}
-			else if (move[1] == 'K' || move[1] == 'k')
+			else if (move[1] == L'K' || move[1] == L'k')
 			{
 				pieceForCoronation = KING; // just to give a proper error message in case of a pawn trying that.
 			}
@@ -111,6 +111,15 @@ bool GameUtils::isValidMove(struct singleMove)
 	return false;
 }
 
+singleMove GameUtils::thisPieceCanMoveThere(singleMove move)
+{
+	// this function will search the board for the type piece (of the right color) that can move to destination.
+	// return something non-valid if no piece or more than one piece can
+	
+	
+	return singleMove();
+}
+
 std::wstring GameUtils::removeUnnececeryEnding(std::wstring move)
 {
 	if (move.empty())
@@ -124,13 +133,4 @@ std::wstring GameUtils::removeUnnececeryEnding(std::wstring move)
 	return move;
 }
 
-Coordinate GameUtils::squareToCoordinate(std::wstring destinationSquare)
-{
-	Coordinate ret;
-	
-	ret.collumn = destinationSquare[0] - 'a';
-	ret.row = destinationSquare[1] - 1;
-	// fix bug it shows "row 51" and stuff
 
-	return ret;
-}
