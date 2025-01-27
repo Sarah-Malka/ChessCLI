@@ -9,6 +9,7 @@ protected:
 	PieceType type;
 	Color color;
 	Coordinate position;
+	bool IsStaying(const Coordinate targetPosition) const;
 
 public: 
 	Piece(PieceType type, Color color, Coordinate position);

@@ -3,6 +3,11 @@
 #include "board.h"
 #include <cmath>
 
+bool Piece::IsStaying(const Coordinate targetPosition) const
+{
+	return ((targetPosition.row == position.row) && (targetPosition.collumn == position.collumn));
+}
+
 Piece::Piece(const PieceType type, const Color color, const Coordinate position)
 	: type(type), color(color)
 {
@@ -39,6 +44,11 @@ Color Piece::getColor() const
 
 bool King::IsValidMove(Coordinate targetPosition, const Board& board)
 {
+	if (IsStaying(targetPosition))
+	{
+		return false;
+	}
+
 	int row = this->position.row;
 	int colomn = this->position.collumn;
 	int targetRow = targetPosition.row;
@@ -52,10 +62,6 @@ bool King::IsValidMove(Coordinate targetPosition, const Board& board)
 		}
 	}
 
-	if ((targetPosition.row == position.row) && (targetPosition.collumn == position.collumn))
-	{
-		return false;
-	}
 
 	if (std::abs(position.row - targetPosition.row) > 1 || std::abs(position.collumn - targetPosition.collumn) > 1)
 	{
