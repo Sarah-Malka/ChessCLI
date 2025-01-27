@@ -58,6 +58,17 @@ void Board::PrintBoard() const
 		std::cout << std::endl;
 		ChangeColor();
 	}
+	std::cout << std::endl;
+
+}
+
+void Board::Move(const Coordinate source, const Coordinate dest)
+{
+	Piece* sourcePiece = board[source.row][source.collumn];
+	board[source.row][source.collumn] = nullptr;
+	board[dest.row][dest.collumn] = sourcePiece;
+
+	sourcePiece->Move(dest);
 }
 
 bool Board::isCheckmate()
@@ -75,7 +86,7 @@ array2D Board::GetToInitialState()
 	array2D init = {
 		{new Rock(Color::WHITE, 0, 0), new Knight(Color::WHITE, 0, 1), new Bishop(Color::WHITE, 0, 2), new Queen(Color::WHITE, 0, 3), new King(Color::WHITE, 0, 4), new Bishop(Color::WHITE, 0, 5), new Knight(Color::WHITE, 0, 6), new Rock(Color::WHITE, 0, 7)},
 		{new Pawn(Color::WHITE, 1, 0), new Pawn(Color::WHITE, 1, 1), new Pawn(Color::WHITE, 1, 2), new Pawn(Color::WHITE, 1, 3), new Pawn(Color::WHITE, 1, 4), new Pawn(Color::WHITE, 1, 5), new Pawn(Color::WHITE, 1, 6), new Pawn(Color::WHITE, 1, 7)},
-		{nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr},
+		{nullptr, new King(Color::BLACK, 2, 1), nullptr, nullptr, nullptr, nullptr, nullptr, nullptr},
 		{nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr},
 		{nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr},
 		{nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr},

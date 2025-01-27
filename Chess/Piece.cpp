@@ -1,6 +1,23 @@
 #include "Piece.h"
 #include "exception.h"
 #include "board.h"
+#include <cmath>
+
+bool Piece::IsStaying(const Coordinate targetPosition) const
+{
+	return ((targetPosition.row == position.row) && (targetPosition.collumn == position.collumn));
+}
+
+bool Piece::IsEatingHisColor(const Coordinate targetPosition, const Board& board) const
+{
+	if (board[targetPosition.row][targetPosition.collumn] != nullptr)
+	{
+		if (board[targetPosition.row][targetPosition.collumn]->getColor() == this->color)
+		{
+			return true;
+		}
+	}
+}
 
 Piece::Piece(const PieceType type, const Color color, const Coordinate position)
 	: type(type), color(color)
@@ -38,24 +55,19 @@ Color Piece::getColor() const
 
 bool King::IsValidMove(Coordinate targetPosition, const Board& board)
 {
-	int row = this->position.row;
-	int colomn = this->position.collumn;
-	int targetRow = targetPosition.row;
-	int targetColomn = targetPosition.collumn;
-
-	if (board[targetRow][targetColomn] != nullptr)
+	if (IsStaying(targetPosition))
 	{
-		if (board[targetRow][targetColomn]->getColor() == this->color)
-		{
-			return false;
-		}
+		return false;
 	}
-	if ((targetPosition.row == position.row) && (targetPosition.collumn == position.collumn))
+	if (IsEatingHisColor(targetPosition, board))
 	{
 		return false;
 	}
 
-	if ((int)position.row - (int)targetPosition.collumn)
+	if (std::abs(position.row - targetPosition.row) > 1 || std::abs(position.collumn - targetPosition.collumn) > 1)
+	{
+		return false;
+	}
 
 	return true;
 }

@@ -1,10 +1,2 @@
-﻿  board.cpp
-  error.cpp
-  Exception.cpp
-  GameInfo.cpp
-C:\Users\שרה מלכה\source\repos\Chess\Chess\GameInfo.h(21,2): warning C4091: 'static ': ignored on left of 'GameInfo' when no variable is declared
-  GameUtils.cpp
-  main.cpp
-  Piece.cpp
-  Generating Code...
+﻿  Piece.cpp
   Chess.vcxproj -> C:\Users\שרה מלכה\source\repos\Chess\Debug\Chess.exe
