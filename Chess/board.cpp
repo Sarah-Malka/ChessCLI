@@ -12,6 +12,16 @@ Board::Board()
 	board = GetToInitialState();
 }
 
+std::vector<Piece*>& Board::operator[](std::size_t index)
+{
+	return board[index];
+}
+
+const std::vector<Piece*> Board::operator[](std::size_t index) const
+{
+	return board[index];
+}
+
 void ChangeColor()
 {
 	static bool white = 0;
