@@ -19,6 +19,19 @@ bool Piece::IsEatingHisColor(const Coordinate targetPosition, const Board& board
 	}
 }
 
+bool Piece::IsValidMove(const Coordinate targetPosition, const Board& board) const
+{
+	if (IsStaying(targetPosition))
+	{
+		return false;
+	}
+	if (IsEatingHisColor(targetPosition, board))
+	{
+		return false;
+	}
+	return IsValidPieceMove(targetPosition, board);
+}
+
 Piece::Piece(const PieceType type, const Color color, const Coordinate position)
 	: type(type), color(color)
 {
@@ -53,7 +66,16 @@ Color Piece::getColor() const
 	return color;
 }
 
-bool King::IsValidMove(Coordinate targetPosition, const Board& board)
+bool King::IsValidPieceMove(Coordinate targetPosition, const Board& board) const
+{
+	if (std::abs(position.row - targetPosition.row) > 1 || std::abs(position.collumn - targetPosition.collumn) > 1)
+	{
+		return false;
+	}
+
+	return true;
+}
+bool Pawn::IsValidPieceMove(Coordinate targetPosition, const Board& board) const
 {
 	if (IsStaying(targetPosition))
 	{
@@ -64,15 +86,6 @@ bool King::IsValidMove(Coordinate targetPosition, const Board& board)
 		return false;
 	}
 
-	if (std::abs(position.row - targetPosition.row) > 1 || std::abs(position.collumn - targetPosition.collumn) > 1)
-	{
-		return false;
-	}
-
-	return true;
-}
-bool Pawn::IsValidMove(Coordinate targetPosition, const Board& board)
-{
 	if (GameInfo::WhiteToPlay)
 	{
 		if (this->position.collumn == targetPosition.collumn) // not a capture
