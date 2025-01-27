@@ -77,26 +77,78 @@ bool King::IsValidPieceMove(Coordinate targetPosition, const Board& board) const
 }
 bool Pawn::IsValidPieceMove(Coordinate targetPosition, const Board& board) const
 {
-	if (IsStaying(targetPosition))
-	{
-		return false;
-	}
-	if (IsEatingHisColor(targetPosition, board))
-	{
-		return false;
-	}
-
-	if (GameInfo::WhiteToPlay)
+	if (this->color == Color::WHITE)
 	{
 		if (this->position.collumn == targetPosition.collumn) // not a capture
 		{
 			if (this->position.row + 2 == targetPosition.row) // first time the pawn has moved?
 			{
-				if (this->position.row == 1 && board[this->position.row + 1][this->position.collumn + 1] == nullptr && board[this->position.row + 2][this->position.collumn + 2] == nullptr)// note that the row and collumn are in this order
+				if (this->position.row == 1 && board[this->position.row + 1][this->position.collumn] == nullptr && board[this->position.row + 2][this->position.collumn] == nullptr)// note that the row and collumn are in this order
 				{
 					return true;
 				}
+				return false;
 			}
+			else if (this->position.row + 1 == targetPosition.row && board[this->position.row + 1][this->position.collumn] == nullptr)
+			{
+				// something something queenning something?
+				return true;
+			}
+			return false;
+		}
+		else if (this->position.collumn != targetPosition.collumn) // this is a capture
+		{
+			if (this->position.collumn + 1 != targetPosition.collumn && this->position.collumn - 1 != targetPosition.collumn) //move exactly one to the side
+			{
+				return false;
+			}
+			if (this->position.row + 1 != targetPosition.row)
+			{
+				return false;
+			}
+			if (board[targetPosition.row][targetPosition.collumn] == nullptr) //make sure there's something to eat
+			{
+				// here goes some logic to allow en-passant
+				return false;
+			}
+			return true;
+		}
+	}
+	else if (this->color == Color::BLACK)
+	{
+		if (this->position.collumn == targetPosition.collumn) // not a capture
+		{
+			if (this->position.row - 2 == targetPosition.row) // first time the pawn has moved?
+			{
+				if (this->position.row == 6 && board[this->position.row - 1][this->position.collumn] == nullptr && board[this->position.row - 2][this->position.collumn] == nullptr)// note that the row and collumn are in this order
+				{
+					return true;
+				}
+				return false;
+			}
+			else if (this->position.row - 1 == targetPosition.row && board[this->position.row - 1][this->position.collumn] == nullptr)
+			{
+				// something something queenning something?
+				return true;
+			}
+			return false;
+		}
+		else if (this->position.collumn != targetPosition.collumn) // this is a capture
+		{
+			if (this->position.collumn - 1 != targetPosition.collumn && this->position.collumn + 1 != targetPosition.collumn) //move exactly one to the side
+			{
+				return false;
+			}
+			if (this->position.row - 1 != targetPosition.row)
+			{
+				return false;
+			}
+			if (board[targetPosition.row][targetPosition.collumn] == nullptr) //make sure there's something to eat
+			{
+				// here goes some logic to allow en-passant
+				return false;
+			}
+			return true;
 		}
 	}
 }
