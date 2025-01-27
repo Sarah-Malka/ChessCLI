@@ -22,4 +22,5 @@ public:
 	std::vector<Piece*>& operator[](std::size_t index);
 	const std::vector<Piece*> operator[](std::size_t index) const;	
 	void PrintBoard() const;
+	void Move(const Coordinate source, const Coordinate dest);
 };

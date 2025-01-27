@@ -58,6 +58,17 @@ void Board::PrintBoard() const
 		std::cout << std::endl;
 		ChangeColor();
 	}
+	std::cout << std::endl;
+
+}
+
+void Board::Move(const Coordinate source, const Coordinate dest)
+{
+	Piece* sourcePiece = board[source.row][source.collumn];
+	board[source.row][source.collumn] = nullptr;
+	board[dest.row][dest.collumn] = sourcePiece;
+
+	sourcePiece->Move(dest);
 }
 
 bool Board::isCheckmate()

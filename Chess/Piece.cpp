@@ -57,7 +57,7 @@ bool King::IsValidMove(Coordinate targetPosition, const Board& board)
 		return false;
 	}
 
-	if (std::abs(position.row - targetPosition.row) != 1 && std::abs(position.collumn - targetPosition.collumn))
+	if (std::abs(position.row - targetPosition.row) > 1 || std::abs(position.collumn - targetPosition.collumn) > 1)
 	{
 		return false;
 	}
