@@ -64,9 +64,14 @@ bool Pawn::IsValidMove(Coordinate targetPosition, const Board& board)
 	if (GameInfo::WhiteToPlay)
 	{
 		if (this->position.collumn == targetPosition.collumn) // not a capture
+		{
 			if (this->position.row + 2 == targetPosition.row) // first time the pawn has moved?
 			{
-				if (this->position.row == 1 && board[0][0] == )
+				if (this->position.row == 1 && board[this->position.row + 1][this->position.collumn + 1] == nullptr && board[this->position.row + 2][this->position.collumn + 2] == nullptr)// note that the row and collumn are in this order
+				{
+					return true;
+				}
 			}
+		}
 	}
 }
