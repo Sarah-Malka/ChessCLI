@@ -2,11 +2,12 @@
 #include "types.h"
 #include "board.h"
 
-static class GameInfo
+class GameInfo
 {
+public:
 	Board board;
 	singleMove lastMove;
-	bool WhiteToPlay = true;
+	static bool WhiteToPlay;
 
 
 	bool whiteKingMoved = false;
@@ -17,6 +18,6 @@ static class GameInfo
 	bool h1BlackRockMoved = false;
 	bool h8BlackRockMoved = false;
 
-	bool lastMoveWasDoubleMoveByPawn = false;
+	bool lastMoveWasDoubleMoveByPawn = false;//should save the location of that pawn?
 };
 

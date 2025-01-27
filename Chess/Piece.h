@@ -1,5 +1,6 @@
 #pragma once
 #include "basicTypes.h"
+#include "GameInfo.h"
 
 class Board;
 
@@ -23,7 +24,7 @@ class Pawn : public Piece
 {
 public:
 	Pawn(Color color, int row, int colomn) : Piece(PieceType::PAWN, color, row, colomn) {};
-	bool IsValidMove(Coordinate targetPosition, const Board& board) override { return true; };
+	bool IsValidMove(Coordinate targetPosition, const Board& board) override;
 };
 class King : public Piece
 {

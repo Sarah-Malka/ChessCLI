@@ -99,17 +99,13 @@ singleMove GameUtils::stringToMove(std::wstring move)
 	return ret;
 }
 
-bool GameUtils::isValidMove(struct singleMove)
-{
+// was here: isValidMove
 	// color of the starting piece matching the players turn
 	// can the type of piece move this way?
 	// use "isCheck(color)" function
 	// any blocking pieces?
 	// special moves (castling, en-passant)
 	// pawn moves (can go only to empty, can capture only to filled)
-
-	return false;
-}
 
 singleMove GameUtils::thisPieceCanMoveThere(singleMove move)
 {

@@ -36,4 +36,14 @@ Color Piece::getColor() const
 	return color;
 }
 
-
+bool Pawn::IsValidMove(Coordinate targetPosition, const Board& board)
+{
+	if (GameInfo::WhiteToPlay)
+	{
+		if (this->position.collumn == targetPosition.collumn) // not a capture
+			if (this->position.row + 2 == targetPosition.row) // first time the pawn has moved?
+			{
+				if (this->position.row == 1 && board[0][0] == )
+			}
+	}
+}
