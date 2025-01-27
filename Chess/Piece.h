@@ -10,6 +10,7 @@ protected:
 	Color color;
 	Coordinate position;
 	bool IsStaying(const Coordinate targetPosition) const;
+	bool IsEatingHisColor(const Coordinate targetPosition, const Board& board) const;
 
 public: 
 	Piece(PieceType type, Color color, Coordinate position);
