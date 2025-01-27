@@ -30,7 +30,7 @@ class King : public Piece
 {
 public:
 	King(Color color, int row, int colomn) : Piece(PieceType::KING, color, row, colomn) {};
-	bool IsValidMove(Coordinate targetPosition, const Board& board) override { return true; };
+	bool IsValidMove(Coordinate targetPosition, const Board& board) override;
 };
 class Queen : public Piece
 {

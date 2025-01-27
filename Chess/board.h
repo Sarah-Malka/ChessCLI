@@ -8,7 +8,7 @@ using array2D = std::vector<std::vector<Piece*>>;
 
 class Board
 {
-private:
+public:
 	array2D board;
 
 	static bool alreadyCreated;
@@ -19,6 +19,7 @@ private:
 
 public:
 	Board();
-
+	std::vector<Piece*>& operator[](std::size_t index);
+	const std::vector<Piece*> operator[](std::size_t index) const;	
 	void PrintBoard() const;
 };
