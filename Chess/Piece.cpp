@@ -66,6 +66,11 @@ Color Piece::getColor() const
 	return color;
 }
 
+Coordinate Piece::getPosition() const
+{
+	return position;
+}
+
 bool King::IsValidPieceMove(Coordinate targetPosition, const Board& board) const
 {
 	if (std::abs(position.row - targetPosition.row) > 1 || std::abs(position.collumn - targetPosition.collumn) > 1)
@@ -86,7 +91,7 @@ bool Pawn::IsValidPieceMove(Coordinate targetPosition, const Board& board) const
 		return false;
 	}
 
-	if (GameInfo::WhiteToPlay)
+	if (color == Color::WHITE)
 	{
 		if (this->position.collumn == targetPosition.collumn) // not a capture
 		{

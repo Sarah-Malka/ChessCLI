@@ -4,5 +4,7 @@
 
 enum class ErrorCode
 {
-	PositaionOutOfBoard = 0
+	PositaionOutOfBoard = 0,
+	NoPieceCanMove,
+	MoreThanOneCompatiblePiece
 };

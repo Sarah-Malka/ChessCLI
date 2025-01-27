@@ -1,5 +1,5 @@
 ﻿#include <iostream>
-#include "board.h"
+#include "game.h"
 #include <locale>
 #include <cstdlib>
 #include "gameUtils.h"
@@ -8,7 +8,11 @@ int main()
 {
     system("chcp 65001 > nul");
     setlocale(LC_ALL, ".UTF-8");
-    Board a;
+
+    Game game;
+    game.Start();
+
+    /*Board a;
 
     a.PrintBoard();
     std::wstring move = L"";
@@ -21,7 +25,7 @@ int main()
     {
         a.Move(Coordinate{ 2,1 }, myMove.destination);
     }
-    a.PrintBoard();
+    a.PrintBoard();*/
 
 
     return 0;
