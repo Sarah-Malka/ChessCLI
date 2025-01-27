@@ -39,6 +39,12 @@ void ChangeColor()
 	white = !white;
 }
 
+void DefaultColor()
+{
+	HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(hStdOut, FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED);
+}
+
 void Board::PrintBoard() const
 {
 	for (int i = 7; i >= 0; i--)
@@ -55,9 +61,12 @@ void Board::PrintBoard() const
 			wchar_t PieceType_symbol = VisualUtils::GetPieceRepresentation(board[i][j]->getColor(), board[i][j]->getType(), flipColor);
 			std::wcout << PieceType_symbol << L" ";
 		}
+		DefaultColor();
 		std::cout << std::endl;
 		ChangeColor();
 	}
+	DefaultColor();
+
 	std::cout << std::endl;
 
 }
