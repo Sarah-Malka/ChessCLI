@@ -142,6 +142,7 @@
     <ClCompile Include="board.cpp" />
     <ClCompile Include="error.cpp" />
     <ClCompile Include="Exception.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameInfo.cpp" />
     <ClCompile Include="GameUtils.cpp" />
     <ClCompile Include="main.cpp" />
@@ -153,6 +154,7 @@
     <ClInclude Include="board.h" />
     <ClInclude Include="error.h" />
     <ClInclude Include="Exception.h" />
+    <ClInclude Include="Game.h" />
     <ClInclude Include="GameInfo.h" />
     <ClInclude Include="GameUtils.h" />
     <ClInclude Include="Piece.h" />

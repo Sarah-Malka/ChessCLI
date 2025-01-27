@@ -1,6 +1,5 @@
 #pragma once
 #include "basicTypes.h"
-#include "GameInfo.h"
 
 class Board;
 
@@ -21,6 +20,7 @@ public:
 	void Move(Coordinate targetPositiond);
 	PieceType getType() const;
 	Color getColor() const;
+	Coordinate getPosition() const;
 };
 
 class Pawn : public Piece

@@ -66,6 +66,11 @@ Color Piece::getColor() const
 	return color;
 }
 
+Coordinate Piece::getPosition() const
+{
+	return position;
+}
+
 bool King::IsValidPieceMove(Coordinate targetPosition, const Board& board) const
 {
 	if (std::abs(position.row - targetPosition.row) > 1 || std::abs(position.collumn - targetPosition.collumn) > 1)
