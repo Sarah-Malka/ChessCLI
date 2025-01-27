@@ -1,6 +1,7 @@
 #include "Piece.h"
 #include "exception.h"
 #include "board.h"
+#include <cmath>
 
 Piece::Piece(const PieceType type, const Color color, const Coordinate position)
 	: type(type), color(color)
@@ -50,12 +51,16 @@ bool King::IsValidMove(Coordinate targetPosition, const Board& board)
 			return false;
 		}
 	}
+
 	if ((targetPosition.row == position.row) && (targetPosition.collumn == position.collumn))
 	{
 		return false;
 	}
 
-	if ((int)position.row - (int)targetPosition.collumn)
+	if (std::abs(position.row - targetPosition.row) != 1 && std::abs(position.collumn - targetPosition.collumn))
+	{
+		return false;
+	}
 
 	return true;
 }
