@@ -73,6 +73,8 @@ void Board::PrintBoard() const
 {
 	for (int i = 7; i >= 0; i--)
 	{
+		DefaultColor();
+		std::wcout << i+1 << L" ";
 		for (int j = 0; j < 8; j++)
 		{
 			ChangeColor();
@@ -90,7 +92,7 @@ void Board::PrintBoard() const
 		ChangeColor();
 	}
 	DefaultColor();
-
+	std::wcout << L"  a b c d e f g h";
 	std::cout << std::endl;
 
 }
