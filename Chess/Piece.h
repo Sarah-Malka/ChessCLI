@@ -63,5 +63,5 @@ class Rock : public Piece
 public:
 	Rock(Color color, int row, int colomn) : Piece(PieceType::ROCK, color, row, colomn){};
 protected:
-	bool IsValidPieceMove(Coordinate targetPosition, const Board& board) const override { return true; };
+	bool IsValidPieceMove(Coordinate targetPosition, const Board& board) const override;
 };

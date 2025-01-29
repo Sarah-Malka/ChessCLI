@@ -22,6 +22,16 @@ const std::vector<Piece*> Board::operator[](std::size_t index) const
 	return board[index];
 }
 
+Piece*& Board::operator[](Coordinate position)
+{
+	return board[position.row][position.collumn];
+}
+
+Piece* const Board::operator[](Coordinate position) const
+{
+	return board[position.row][position.collumn];
+}
+
 void ChangeColor()
 {
 	static bool white = 0;
