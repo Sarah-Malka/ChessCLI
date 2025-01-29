@@ -86,6 +86,7 @@ void Game::Start()
 			}
 			Piece* pieceToMove = possiblePieces[0];
 			board.Move(pieceToMove->getPosition(), move.destination);
+			//check if coronation needs to happen, if no coronation request was submitted but a pawn is on 8 or 1 rank, handle
 			GameUtils::GameSound(GameInfo::atelastMove);
 			invalid_input = false;
 			GameInfo::WhiteToPlay = !GameInfo::WhiteToPlay;

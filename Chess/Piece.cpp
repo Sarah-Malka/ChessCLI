@@ -137,6 +137,7 @@ bool Pawn::IsValidPieceMove(Coordinate targetPosition, const Board& board) const
 				// here goes some logic to allow en-passant
 				return false;
 			}
+			//queening goes here
 			return true;
 		}
 	}
