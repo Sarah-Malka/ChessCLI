@@ -49,7 +49,7 @@ class Bishop : public Piece
 public:
 	Bishop(Color color, int row, int colomn) : Piece(PieceType::BISHOP, color, row, colomn) {};
 protected:
-	bool IsValidPieceMove(Coordinate targetPosition, const Board& board) const override { return true; };
+	bool IsValidPieceMove(Coordinate targetPosition, const Board& board) const override;
 };
 class Knight : public Piece
 {

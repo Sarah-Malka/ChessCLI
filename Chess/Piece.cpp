@@ -165,3 +165,13 @@ bool Knight::IsValidPieceMove(Coordinate targetPosition, const Board& board) con
 	}
 	return false;
 }
+
+bool Bishop::IsValidPieceMove(Coordinate targetPosition, const Board& board) const
+{
+	if (((this->position.row - this->position.collumn) == (targetPosition.row - targetPosition.collumn)) xor ((this->position.row + this->position.collumn) == (targetPosition.row + targetPosition.collumn)))
+	{	
+		//if empty all the way
+	return true;
+	}
+	return false;
+}
