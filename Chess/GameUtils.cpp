@@ -4,17 +4,17 @@ PieceType pieceForCoronation = PAWN;
 
 singleMove GameUtils::stringToMove(std::wstring move)
 {
-	// this function returns only destination and . if the input string isn't a move, the function returns an empty move
+	// if the input string isn't a move, the function returns an empty move
 
 	// define return var
 	singleMove ret;
-	ret.origin.collumn = 0;
-	ret.origin.row = 0;
+	ret.origin.collumn = 10; // junk value
+	ret.origin.row = 10;
 	ret.destination.collumn = 0;
 	ret.destination.row = 0;
 	ret.originalPiece = PieceType::PAWN;
 
-	move = removeUnnececeryEnding(move); //do i really need this function at all?
+	move = removeUnnececeryEnding(move); // use later to alarm player that took or gave check without knowing?
 	if (move.empty())
 	{
 		std::cout << "empty move!" << std::endl;
@@ -55,6 +55,7 @@ singleMove GameUtils::stringToMove(std::wstring move)
 	}
 	if (move.length() < 2 || move[0] < L'a' || move[0] > L'h' || move[1] < L'1' || move[1] > L'8') // this will be non legit
 	{
+		// Error!
 		ret.originalPiece = PAWN;
 		return ret;
 	}
@@ -90,42 +91,22 @@ singleMove GameUtils::stringToMove(std::wstring move)
 		}
 	}
 
-	// find what piece is moving: piece type and color, what piece can get there.
-	// if it ends with "=Q", with "#" or with "+" then handel. before them will be the destination square
-	// maybe unless the moving piece was a pawn, which you can know by seeing if the first letter is capital
 	// if an "x" was out of place but the move was legal, mention that (and ask if sure?)
-	// if queening - need function to change the piece in the destination coordinate, to the premoted piece
+	// if queening - need function to change the piece in the destination coordinate - to the premoted piece
+	// special moves (castling, en-passant)
 
 	return ret;
 }
 
-// was here: isValidMove
-	// color of the starting piece matching the players turn
-	// can the type of piece move this way?
-	// use "isCheck(color)" function
-	// any blocking pieces?
-	// special moves (castling, en-passant)
-	// pawn moves (can go only to empty, can capture only to filled)
-
-singleMove GameUtils::thisPieceCanMoveThere(singleMove move)
-{
-	// this function will search the board for the type piece (of the right color) that can move to destination.
-	// return something non-valid if no piece or more than one piece can
-	
-	
-	return singleMove();
-}
-
 std::wstring GameUtils::removeUnnececeryEnding(std::wstring move)
 {
-	if (move.empty())
-	{
-		return move;
-	}
-	if (move.back() == '#' || move.back() == '+')
+	while (move.back() == '#' || move.back() == '+')
 	{
 		move.pop_back();
 	}
+
+	//while (move.back() > '8' or move.back() < '1')
+		// this fails to "d8=Q"
 	return move;
 }
 

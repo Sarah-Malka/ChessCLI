@@ -71,6 +71,7 @@ void DefaultColor()
 
 void Board::PrintBoard() const
 {
+	std::cout << std::endl;
 	for (int i = 7; i >= 0; i--)
 	{
 		DefaultColor();
