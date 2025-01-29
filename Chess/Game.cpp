@@ -2,6 +2,7 @@
 #include <iostream>
 #include "GameUtils.h"
 #include "Exception.h"
+#include <Windows.h>
 
 std::vector<Piece*> Game::GetPossiblePiecesToMove(const singleMove move) const
 {
@@ -88,6 +89,7 @@ void Game::Start()
 			board.Move(pieceToMove->getPosition(), move.destination);
 			//check if coronation needs to happen, if no coronation request was submitted but a pawn is on 8 or 1 rank, handle
 			GameUtils::GameSound(GameInfo::atelastMove);
+			Sleep(130);
 			invalid_input = false;
 			GameInfo::WhiteToPlay = !GameInfo::WhiteToPlay;
 		}
