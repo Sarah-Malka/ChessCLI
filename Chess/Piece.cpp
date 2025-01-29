@@ -165,7 +165,6 @@ bool Knight::IsValidPieceMove(Coordinate targetPosition, const Board& board) con
 	}
 	return false;
 }
-
 bool Bishop::IsValidPieceMove(Coordinate targetPosition, const Board& board) const
 {
 	if (!((this->position.row - this->position.collumn) == (targetPosition.row - targetPosition.collumn)) xor ((this->position.row + this->position.collumn) == (targetPosition.row + targetPosition.collumn)))
@@ -202,8 +201,6 @@ bool Bishop::IsValidPieceMove(Coordinate targetPosition, const Board& board) con
 
 	return true;
 }
-
-
 bool Rock::IsValidPieceMove(Coordinate targetPosition, const Board& board) const
 {
 	if (targetPosition.row != position.row && targetPosition.collumn != position.collumn)
@@ -224,6 +221,54 @@ bool Rock::IsValidPieceMove(Coordinate targetPosition, const Board& board) const
 		for (uint8_t i = std::min(position.collumn, targetPosition.collumn) + 1; i < std::max(position.collumn, targetPosition.collumn); i++)
 		{
 			squaresInTheWay.push_back(Coordinate{ position.row, i });
+		}
+	}
+
+	for (int i = 0; i < squaresInTheWay.size(); i++)
+	{
+		if (board[squaresInTheWay[i]] != nullptr)
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+bool Queen::IsValidPieceMove(Coordinate targetPosition, const Board& board) const
+{
+	if (!((this->position.row - this->position.collumn) == (targetPosition.row - targetPosition.collumn)) xor ((this->position.row + this->position.collumn) == (targetPosition.row + targetPosition.collumn)) xor (targetPosition.row == position.row) xor (targetPosition.collumn == position.collumn))
+	{
+		return false;
+	}
+	std::vector<Coordinate> squaresInTheWay;
+	if (position.collumn == targetPosition.collumn)
+	{
+		for (uint8_t i = std::min(position.row, targetPosition.row) + 1; i < std::max(position.row, targetPosition.row); i++)
+		{
+			squaresInTheWay.push_back(Coordinate{ i, position.collumn });
+		}
+	}
+	else if (position.row == targetPosition.row)
+	{
+		for (uint8_t i = std::min(position.collumn, targetPosition.collumn) + 1; i < std::max(position.collumn, targetPosition.collumn); i++)
+		{
+			squaresInTheWay.push_back(Coordinate{ position.row, i });
+		}
+	}
+	else if (this->position.row - this->position.collumn == targetPosition.row - targetPosition.collumn) //a1 to h8 type diagnal
+	{
+		int squareDiff = targetPosition.row - targetPosition.collumn;
+		for (uint8_t i = std::min(position.row, targetPosition.row) + 1; i < std::max(position.row, targetPosition.row); i++) // add 1 to initial i to not chech the original square
+		{
+			squaresInTheWay.push_back(Coordinate{ i, unsigned char(i - squareDiff) }); //{row,collumn}
+		}
+	}
+	else if (this->position.row + this->position.collumn == targetPosition.row + targetPosition.collumn) // a8 to h1 type diagnal
+	{
+		int squareDiff = targetPosition.row + targetPosition.collumn;
+		for (uint8_t i = std::min(position.row, targetPosition.row) + 1; i < std::max(position.row, targetPosition.row); i++)
+		{
+			squaresInTheWay.push_back(Coordinate{ i, unsigned char(squareDiff - i) });
 		}
 	}
 
