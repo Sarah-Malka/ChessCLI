@@ -105,7 +105,7 @@ array2D Board::GetToInitialState()
 	array2D init = {
 		{new Rock(Color::WHITE, 0, 0), new Knight(Color::WHITE, 0, 1), new Bishop(Color::WHITE, 0, 2), new Queen(Color::WHITE, 0, 3), new King(Color::WHITE, 0, 4), new Bishop(Color::WHITE, 0, 5), new Knight(Color::WHITE, 0, 6), new Rock(Color::WHITE, 0, 7)},
 		{new Pawn(Color::WHITE, 1, 0), new Pawn(Color::WHITE, 1, 1), new Pawn(Color::WHITE, 1, 2), new Pawn(Color::WHITE, 1, 3), new Pawn(Color::WHITE, 1, 4), new Pawn(Color::WHITE, 1, 5), new Pawn(Color::WHITE, 1, 6), new Pawn(Color::WHITE, 1, 7)},
-		{nullptr, new King(Color::WHITE, 2, 1), nullptr, nullptr, nullptr, nullptr, nullptr, nullptr},
+		{nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr},
 		{nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr},
 		{nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr},
 		{nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr},

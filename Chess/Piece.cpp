@@ -168,13 +168,41 @@ bool Knight::IsValidPieceMove(Coordinate targetPosition, const Board& board) con
 
 bool Bishop::IsValidPieceMove(Coordinate targetPosition, const Board& board) const
 {
-	if (((this->position.row - this->position.collumn) == (targetPosition.row - targetPosition.collumn)) xor ((this->position.row + this->position.collumn) == (targetPosition.row + targetPosition.collumn)))
+	if (!((this->position.row - this->position.collumn) == (targetPosition.row - targetPosition.collumn)) xor ((this->position.row + this->position.collumn) == (targetPosition.row + targetPosition.collumn)))
 	{	
-		//if empty all the way
-	return true;
+		return false;
 	}
-	return false;
+	//check if diagnol is empty
+	std::vector<Coordinate> squaresInTheWay;
+	if (this->position.row - this->position.collumn == targetPosition.row - targetPosition.collumn) //a1 to h8 type diagnal
+	{
+		int squareDiff = targetPosition.row - targetPosition.collumn;
+		for (uint8_t i = std::min(position.row, targetPosition.row) + 1; i < std::max(position.row, targetPosition.row); i++) // add 1 to initial i to not chech the original square
+		{
+
+			squaresInTheWay.push_back(Coordinate{ i, unsigned char(i - squareDiff) }); //{row,collumn}
+		}
+	}
+	else // a8 to h1 type diagnal
+	{
+		int squareDiff = targetPosition.row + targetPosition.collumn;
+		for (uint8_t i = std::min(position.row, targetPosition.row) + 1; i < std::max(position.row, targetPosition.row); i++)
+		{
+			squaresInTheWay.push_back(Coordinate{ i, unsigned char(squareDiff - i) });
+		}
+	}
+
+	for (int i = 0; i < squaresInTheWay.size(); i++)
+	{
+		if (board[squaresInTheWay[i]] != nullptr)
+		{
+			return false;
+		}
+	}
+
+	return true;
 }
+
 
 bool Rock::IsValidPieceMove(Coordinate targetPosition, const Board& board) const
 {
