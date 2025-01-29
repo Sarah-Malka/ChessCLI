@@ -5,9 +5,8 @@
 #include <Windows.h>
 #include <string>
 
-bool Board::alreadyCreated = false;
-
-Board::Board()
+Board::Board() :
+	kings_locations({ Coordinate{0,4}, Coordinate{7,4} })
 {
 	board = GetToInitialState();
 }
@@ -88,6 +87,37 @@ void Board::Move(const Coordinate source, const Coordinate dest)
 	board[dest.row][dest.collumn] = sourcePiece;
 
 	sourcePiece->Move(dest);
+
+	if (sourcePiece->getType() == PieceType::KING)
+	{
+		kings_locations[sourcePiece->getColor()] = sourcePiece->getPosition();
+	}
+}
+
+bool Board::IsCheck(const Color color) const
+{
+	Coordinate king_location = kings_locations[color];
+
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			if (board[i][j] == nullptr)
+			{
+				continue;
+			}
+			if (board[i][j]->getColor() == color)
+			{
+				continue;
+			}
+			if (board[i][j]->IsValidMove(king_location, *this))
+			{
+				return true;
+			}
+		}
+	}
+
+	return false;
 }
 
 bool Board::isCheckmate()
@@ -113,12 +143,4 @@ array2D Board::GetToInitialState()
 		{new Rock(Color::BLACK, 7, 0), new Knight(Color::BLACK, 7, 1), new Bishop(Color::BLACK, 7, 2), new Queen(Color::BLACK, 7, 3), new King(Color::BLACK, 7, 4), new Bishop(Color::BLACK, 7, 5), new Knight(Color::BLACK, 7, 6), new Rock(Color::BLACK, 7, 7)}
 	};
 	return init;
-}
-
-
-void stam()
-{
-	int a = 7;
-	int* pointer;
-	pointer = &a;
 }

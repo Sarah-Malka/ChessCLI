@@ -42,7 +42,7 @@ class Queen : public Piece
 public:
 	Queen(Color color, int row, int colomn) : Piece(PieceType::QUEEN, color, row, colomn) {};
 protected:
-	bool IsValidPieceMove(Coordinate targetPosition, const Board& board) const override { return true; };
+	bool IsValidPieceMove(Coordinate targetPosition, const Board& board) const override { return false; };
 };
 class Bishop : public Piece
 {

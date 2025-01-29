@@ -25,10 +25,17 @@ std::vector<Piece*> Game::GetPossiblePiecesToMove(const singleMove move) const
 				continue;
 			}
 
-			if (piece->IsValidMove(move.destination, game_info.board))
+			if (!piece->IsValidMove(move.destination, game_info.board))
 			{
-				possiblePieces.push_back(piece);
+				continue;
 			}
+
+			if (game_info.board.IsCheck(colorToPlay))
+			{
+				continue;
+			}
+
+			possiblePieces.push_back(piece);
 		}
 	}
 
