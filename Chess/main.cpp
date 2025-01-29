@@ -12,21 +12,5 @@ int main()
     Game game;
     game.Start();
 
-    /*Board a;
-
-    a.PrintBoard();
-    std::wstring move = L"";
-    std::wcin >> move;
-    singleMove myMove = GameUtils::stringToMove(move);
-
-
-    bool valid = a[2][1]->IsValidMove(myMove.destination, a);
-    if (valid)
-    {
-        a.Move(Coordinate{ 2,1 }, myMove.destination);
-    }
-    a.PrintBoard();*/
-
-
     return 0;
 }

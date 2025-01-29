@@ -56,7 +56,7 @@ class Knight : public Piece
 public:
 	Knight(Color color, int row, int colomn) : Piece(PieceType::KNIGHT, color, row, colomn) {};
 protected:
-	bool IsValidPieceMove(Coordinate targetPosition, const Board& board) const override { return true; };
+	bool IsValidPieceMove(Coordinate targetPosition, const Board& board) const override;
 };
 class Rock : public Piece
 {
