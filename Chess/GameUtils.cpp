@@ -20,7 +20,12 @@ singleMove GameUtils::stringToMove(std::wstring move)
 		return ret; //this is a way of expressing an error. give player another turn instead.
 	}
 
-	if (move[0] == L'K')
+	if (move[0] >= L'a' && move[0] <= L'h' && move[1] == L'x')
+	{
+		ret.origin.collumn = move[0] - L'a';
+		move.erase(0, 2);
+	}
+	else if (move[0] == L'K')
 	{
 		ret.originalPiece = PieceType::KING;
 		move.erase(0, 1); // erase 1 characters starting with position 0
@@ -46,9 +51,17 @@ singleMove GameUtils::stringToMove(std::wstring move)
 		move.erase(0, 1);
 	}
 
+	if (move.empty())
+	{
+		return ret; // error?
+	}
+
 	//get the promotion request saved and then:
 	move = removeUnnececeryEnding(move); // use to alarm player that took or gave check without knowing?
-	move = removeX(move);
+	if (move[0] == L'x')
+	{
+		move.erase(0, 1);
+	}
 
 	// handle player telling us what origin piece is moving
 	if (move.length() > 2)
@@ -64,11 +77,17 @@ singleMove GameUtils::stringToMove(std::wstring move)
 			move.erase(0, 1);
 		}
 	}
+	if (move[0] == L'x')
+	{
+		move.erase(0, 1);
+	}
 
+	// destination
 	if (move.length() != 2 || move[0] < L'a' || move[0] > L'h' || move[1] < L'1' || move[1] > L'8') // this will be non legit
-	{ // deal with: Ne8f6 (theres another two knights in g8 and in e4)
+	{
 		// Error!
-		ret.originalPiece = PAWN;
+		//ret.originalPiece = PAWN;
+		std::cout << "No valid destination! " << std::endl;
 		return ret;
 	}
 	
@@ -112,13 +131,13 @@ singleMove GameUtils::stringToMove(std::wstring move)
 
 std::wstring GameUtils::removeUnnececeryEnding(std::wstring move)
 {
-	while (move.back() > '8' or move.back() < '1')
+	while (move.back() > L'8' or move.back() < L'1')
 	{
 		move.pop_back();
 	}
 
 	//while (move.back() == '#' || move.back() == '+')
-		// this fails to "d8=Q"
+		// fails to "d8=Q"
 	return move;
 }
 
@@ -127,7 +146,7 @@ std::wstring GameUtils::removeX(std::wstring move)
 	uint8_t j = 0;
 	for (uint8_t i = 0; i < move.length(); i++)
 	{
-		if (move[i] != 'x' && move[i] != 'X') 
+		if (move[i] != L'x') 
 		{
 			move[j++] = move[i];
 		}
