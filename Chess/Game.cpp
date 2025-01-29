@@ -29,8 +29,8 @@ std::vector<Piece*> Game::GetPossiblePiecesToMove(const singleMove move) const
 			{
 				continue;
 			}
-
-			if (game_info.board.IsCheck(colorToPlay))
+			
+			if (game_info.board.WillCauseCheck(colorToPlay, piece->getPosition(), move.destination))
 			{
 				continue;
 			}

@@ -19,6 +19,27 @@ bool Piece::IsEatingHisColor(const Coordinate targetPosition, const Board& board
 	}
 }
 
+Piece* Piece::GetCopy()
+{
+	switch (type)
+	{
+	case PieceType::BISHOP:
+		return new Bishop(color, position);
+	case PieceType::KING:
+		return new King(color, position);
+	case PieceType::KNIGHT:
+		return new Knight(color, position);
+	case PieceType::PAWN:
+		return new Pawn(color, position);
+	case PieceType::QUEEN:
+		return new Queen(color, position);
+	case PieceType::ROCK:
+		return new Rock(color, position);
+	default:
+		return nullptr;
+	}
+}
+
 bool Piece::IsValidMove(const Coordinate targetPosition, const Board& board) const
 {
 	if (IsStaying(targetPosition))

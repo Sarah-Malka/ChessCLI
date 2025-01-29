@@ -11,6 +11,21 @@ Board::Board() :
 	board = GetToInitialState();
 }
 
+Board::~Board()
+{
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			if (board[i][j] != nullptr)
+			{
+				delete board[i][j];
+				board[i][j] = nullptr;
+			}
+		}
+	}
+}
+
 std::vector<Piece*>& Board::operator[](std::size_t index)
 {
 	return board[index];
@@ -120,6 +135,13 @@ bool Board::IsCheck(const Color color) const
 	return false;
 }
 
+bool Board::WillCauseCheck(const Color color, const Coordinate source, const Coordinate dest) const
+{
+	Board copy_board(*this);
+	copy_board.Move(source, dest);
+	return copy_board.IsCheck(color);
+}
+
 bool Board::isCheckmate()
 {
 	return false;
@@ -128,6 +150,30 @@ bool Board::isCheckmate()
 bool Board::isStalemate()
 {
 	return false;
+}
+
+Board::Board(const Board& other)
+	: kings_locations(other.kings_locations)
+{
+	board.resize(8);
+	for (int i = 0; i < 8; i++)
+	{
+		board[i].resize(8);
+	}
+
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			Piece* otherPiece = other.board[i][j];
+			if (otherPiece == nullptr)
+			{
+				board[i][j] == nullptr;
+				continue;
+			}
+			board[i][j] = other.board[i][j]->GetCopy();
+		}
+	}
 }
 
 array2D Board::GetToInitialState()

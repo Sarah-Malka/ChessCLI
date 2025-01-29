@@ -10,6 +10,9 @@ class Board
 {
 private:
 	std::vector<Coordinate> kings_locations;
+
+	Board(const Board& other);
+
 public:
 	array2D board;
 	static array2D GetToInitialState();
@@ -19,6 +22,7 @@ public:
 
 public:
 	Board();
+	~Board();
 	std::vector<Piece*>& operator[](std::size_t index);
 	const std::vector<Piece*> operator[](std::size_t index) const;
 
@@ -27,4 +31,5 @@ public:
 	void PrintBoard() const;
 	void Move(const Coordinate source, const Coordinate dest);
 	bool IsCheck(const Color color) const;
+	bool WillCauseCheck(const Color color, const Coordinate source, const Coordinate dest) const;
 };
