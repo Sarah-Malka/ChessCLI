@@ -46,7 +46,10 @@ void Game::Start()
 {
 	while (true)
 	{
-		game_info.board.PrintBoard();
+		if (!invalid_input)
+		{
+			game_info.board.PrintBoard();
+		}
 		
 		std::wcout << L"Enter " << (game_info.WhiteToPlay ? L"white's " : L"black's ") << L"move: " << std::endl;
 		std::wstring str_move = L"";
@@ -58,19 +61,21 @@ void Game::Start()
 			std::vector<Piece*> possiblePieces = GetPossiblePiecesToMove(move);
 			if (possiblePieces.empty())
 			{
-				throw Exception(ErrorCode::NoPieceCanMove);
+				throw Exception(ErrorCode::NoPieceCanMove, L"There is no compatible piece");
 			}
 			if (possiblePieces.size() > 1)
 			{
-				throw Exception(ErrorCode::MoreThanOneCompatiblePiece);
+				throw Exception(ErrorCode::MoreThanOneCompatiblePiece, L"Ambigious command, more than one piece can do this move");
 			}
 			Piece* pieceToMove = possiblePieces[0];
 			game_info.board.Move(pieceToMove->getPosition(), move.destination);
+			invalid_input = false;
 			game_info.WhiteToPlay = !game_info.WhiteToPlay;
 		}
 		catch (Exception ex)
 		{
-			std::wcout << L"Error! ErrorCode: " << (int)ex.GetError() << std::endl;
+			invalid_input = true;
+			std::wcout << L"Error! ErrorCode " << (int)ex.GetError() << L": " << ex.GetMessage() << std::endl;
 			continue;
 		}
 	}

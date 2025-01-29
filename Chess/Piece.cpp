@@ -58,7 +58,7 @@ Piece::Piece(const PieceType type, const Color color, const Coordinate position)
 {
 	if (position.row > 7 || position.collumn > 7)
 	{
-		throw Exception(ErrorCode::PositaionOutOfBoard);
+		throw Exception(ErrorCode::PositaionOutOfBoard, L"Postition out of board");
 	}
 	this->position.collumn = position.collumn;
 	this->position.row = position.row;
