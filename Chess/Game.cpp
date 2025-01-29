@@ -35,6 +35,23 @@ std::vector<Piece*> Game::GetPossiblePiecesToMove(const singleMove move) const
 				continue;
 			}
 
+			// if player gave us the moving piece's origin location:
+			Coordinate origin = piece->getPosition();
+			if (move.origin.collumn != 10) // 10 is the agreed-upon junk value
+			{
+				if (origin.collumn != move.origin.collumn)
+				{
+					continue;
+				}
+			}
+			if (move.origin.row != 10)
+			{
+				if (origin.row != move.origin.row)
+				{
+					continue;
+				}
+			}
+
 			possiblePieces.push_back(piece);
 		}
 	}
