@@ -69,6 +69,19 @@ void DefaultColor()
 	SetConsoleTextAttribute(hStdOut, FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED);
 }
 
+void RedColor(const Color foreground)
+{
+	HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	if (foreground == Color::BLACK)
+	{
+		SetConsoleTextAttribute(hStdOut, BACKGROUND_RED);
+	}
+	else
+	{
+		SetConsoleTextAttribute(hStdOut, BACKGROUND_RED | FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED);
+	}
+}
+
 void Board::PrintBoard() const
 {
 	std::cout << std::endl;
@@ -79,13 +92,19 @@ void Board::PrintBoard() const
 		for (int j = 0; j < 8; j++)
 		{
 			ChangeColor();
-			if (board[i][j] == nullptr)
+			Piece* piece = board[i][j];
+			if (piece == nullptr)
 			{
 				std::wcout << L"  ";
 				continue;
 			}
 			bool flipColor = ((i + j) % 2 == 0);
-			wchar_t PieceType_symbol = VisualUtils::GetPieceRepresentation(board[i][j]->getColor(), board[i][j]->getType(), flipColor);
+			wchar_t PieceType_symbol = VisualUtils::GetPieceRepresentation(piece->getColor(), piece->getType(), flipColor);
+			if (piece->getType() == PieceType::KING && IsCheck(piece->getColor()))
+			{
+				PieceType_symbol = L'\u265A';
+				RedColor(piece->getColor());
+			}
 			std::wcout << PieceType_symbol << L" ";
 		}
 		DefaultColor();
