@@ -2,6 +2,7 @@
 #include <iostream>
 #include "GameUtils.h"
 #include "Exception.h"
+#include <Windows.h>
 
 std::vector<Piece*> Game::GetPossiblePiecesToMove(const singleMove move) const
 {
@@ -87,6 +88,7 @@ void Game::Start()
 			Piece* pieceToMove = possiblePieces[0];
 			board.Move(pieceToMove->getPosition(), move.destination);
 			GameUtils::GameSound(GameInfo::atelastMove);
+			Sleep(130);
 			invalid_input = false;
 			GameInfo::WhiteToPlay = !GameInfo::WhiteToPlay;
 		}
