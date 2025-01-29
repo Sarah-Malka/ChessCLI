@@ -175,8 +175,7 @@ bool Bishop::IsValidPieceMove(Coordinate targetPosition, const Board& board) con
 	}
 	return false;
 }
-	}
-}
+
 
 bool Rock::IsValidPieceMove(Coordinate targetPosition, const Board& board) const
 {
