@@ -80,7 +80,7 @@ bool King::IsValidPieceMove(Coordinate targetPosition, const Board& board) const
 
 	return true;
 }
-bool Pawn::IsValidPieceMove(Coordinate targetPosition, const Board& board) const
+bool Pawn::IsValidPieceMove(Coordinate targetPosition, const Board& board) const // unfinished
 {
 	if (this->color == Color::WHITE)
 	{
@@ -156,4 +156,12 @@ bool Pawn::IsValidPieceMove(Coordinate targetPosition, const Board& board) const
 			return true;
 		}
 	}
+}
+bool Knight::IsValidPieceMove(Coordinate targetPosition, const Board& board) const
+{
+	if (((abs(targetPosition.row - this->position.row) == 2) && (abs(targetPosition.collumn - this->position.collumn) == 1)) xor ((abs(targetPosition.row - this->position.row) == 1) && (abs(targetPosition.collumn - this->position.collumn) == 2)))
+	{
+		return true;
+	}
+	return false;
 }
