@@ -14,7 +14,6 @@ singleMove GameUtils::stringToMove(std::wstring move)
 	ret.destination.row = 0;
 	ret.originalPiece = PieceType::PAWN;
 
-	move = removeUnnececeryEnding(move); // use later to alarm player that took or gave check without knowing?
 	if (move.empty())
 	{
 		std::cout << "empty move!" << std::endl;
@@ -47,14 +46,27 @@ singleMove GameUtils::stringToMove(std::wstring move)
 		move.erase(0, 1);
 	}
 
-	lastMoveWasCapture = false;
-	if (!move.empty() && (move[0] == L'x' || move[0] == L'X'))
+	//get the promotion request saved and then:
+	move = removeUnnececeryEnding(move); // use to alarm player that took or gave check without knowing?
+	move = removeX(move);
+
+	// handle player telling us what origin piece is moving
+	if (move.length() > 2)
 	{
-		move.erase(0, 1); 
-		lastMoveWasCapture = true;
+		if (move[0] >= L'a' && move[0] <= L'h')
+		{
+			ret.origin.collumn = move[0] - L'a';
+			move.erase(0, 1);
+		}
+		if (move[0] >= L'1' && move[0] <= L'8')
+		{
+			ret.origin.row = move[0] - L'1';
+			move.erase(0, 1);
+		}
 	}
-	if (move.length() < 2 || move[0] < L'a' || move[0] > L'h' || move[1] < L'1' || move[1] > L'8') // this will be non legit
-	{
+
+	if (move.length() != 2 || move[0] < L'a' || move[0] > L'h' || move[1] < L'1' || move[1] > L'8') // this will be non legit
+	{ // deal with: Ne8f6 (theres another two knights in g8 and in e4)
 		// Error!
 		ret.originalPiece = PAWN;
 		return ret;
@@ -100,14 +112,27 @@ singleMove GameUtils::stringToMove(std::wstring move)
 
 std::wstring GameUtils::removeUnnececeryEnding(std::wstring move)
 {
-	while (move.back() == '#' || move.back() == '+')
+	while (move.back() > '8' or move.back() < '1')
 	{
 		move.pop_back();
 	}
 
-	//while (move.back() > '8' or move.back() < '1')
+	//while (move.back() == '#' || move.back() == '+')
 		// this fails to "d8=Q"
 	return move;
 }
 
+std::wstring GameUtils::removeX(std::wstring move)
+{
+	uint8_t j = 0;
+	for (uint8_t i = 0; i < move.length(); i++)
+	{
+		if (move[i] != 'x' && move[i] != 'X') 
+		{
+			move[j++] = move[i];
+		}
+	}
+	move[j] = '\0'; // Null-terminate the modified string
 
+	return move;
+}

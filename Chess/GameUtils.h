@@ -8,7 +8,8 @@ class GameUtils
 
 public:
 	static singleMove stringToMove(std::wstring move);
-	static singleMove thisPieceCanMoveThere(singleMove);
 private:
 	static std::wstring removeUnnececeryEnding(std::wstring move);
+	static std::wstring removeX(std::wstring move);
+
 };
