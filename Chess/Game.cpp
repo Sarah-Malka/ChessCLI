@@ -1,7 +1,10 @@
+#pragma comment(lib, "winmm.lib")
+
 #include "Game.h"
 #include <iostream>
 #include "GameUtils.h"
 #include "Exception.h"
+#include <Windows.h>
 
 std::vector<Piece*> Game::GetPossiblePiecesToMove(const singleMove move) const
 {
@@ -10,7 +13,7 @@ std::vector<Piece*> Game::GetPossiblePiecesToMove(const singleMove move) const
 	{
 		for (int j = 0; j < 8; j++)
 		{
-			Piece* piece = game_info.board[i][j];
+			Piece* piece = board[i][j];
 			if (piece == nullptr)
 			{
 				continue;
@@ -19,18 +22,18 @@ std::vector<Piece*> Game::GetPossiblePiecesToMove(const singleMove move) const
 			{
 				continue;
 			}
-			Color colorToPlay = game_info.WhiteToPlay ? Color::WHITE : Color::BLACK;
+			Color colorToPlay = GameInfo::WhiteToPlay ? Color::WHITE : Color::BLACK;
 			if (piece->getColor() != colorToPlay)
 			{
 				continue;
 			}
 
-			if (!piece->IsValidMove(move.destination, game_info.board))
+			if (!piece->IsValidMove(move.destination, board))
 			{
 				continue;
 			}
 			
-			if (game_info.board.WillCauseCheck(colorToPlay, piece->getPosition(), move.destination))
+			if (board.WillCauseCheck(colorToPlay, piece->getPosition(), move.destination))
 			{
 				continue;
 			}
@@ -48,10 +51,10 @@ void Game::Start()
 	{
 		if (!invalid_input)
 		{
-			game_info.board.PrintBoard();
+			board.PrintBoard();
 		}
 		
-		std::wcout << L"Enter " << (game_info.WhiteToPlay ? L"white's " : L"black's ") << L"move: " << std::endl;
+		std::wcout << L"Enter " << (GameInfo::WhiteToPlay ? L"white's " : L"black's ") << L"move: " << std::endl;
 		std::wstring str_move = L"";
 		std::wcin >> str_move;
 
@@ -68,14 +71,22 @@ void Game::Start()
 				throw Exception(ErrorCode::MoreThanOneCompatiblePiece, L"Ambigious command, more than one piece can do this move");
 			}
 			Piece* pieceToMove = possiblePieces[0];
-			game_info.board.Move(pieceToMove->getPosition(), move.destination);
+			board.Move(pieceToMove->getPosition(), move.destination);
+			if (GameInfo::atelastMove)
+			{
+				PlaySoundW(TEXT("Sounds\\eat.wav"), NULL, SND_FILENAME | SND_ASYNC);
+			}
+			else
+			{
+				PlaySoundW(TEXT("Sounds\\move.wav"), NULL, SND_FILENAME | SND_ASYNC);
+			}
 			invalid_input = false;
-			game_info.WhiteToPlay = !game_info.WhiteToPlay;
+			GameInfo::WhiteToPlay = !GameInfo::WhiteToPlay;
 		}
 		catch (Exception ex)
 		{
 			invalid_input = true;
-			std::wcout << L"Error! ErrorCode " << (int)ex.GetError() << L": " << ex.GetMessage() << std::endl;
+			std::wcout << L"Error! ErrorCode " << (int)ex.GetError() << L": " << ex.Message() << std::endl;
 			continue;
 		}
 	}

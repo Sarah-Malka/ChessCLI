@@ -1,14 +1,12 @@
 #pragma once
 #include "types.h"
-#include "board.h"
 
 class GameInfo
 {
 public:
-	Board board;
-	singleMove lastMove;
 	static bool WhiteToPlay;
 
+	static bool atelastMove;
 
 	bool whiteKingMoved = false;
 	bool a1WhiteRockMoved = false;

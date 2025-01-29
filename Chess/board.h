@@ -1,7 +1,6 @@
 #pragma once
 #include <vector>
 #include "Piece.h"
-//#include "types.h"
 
 using array2D = std::vector<std::vector<Piece*>>;
 

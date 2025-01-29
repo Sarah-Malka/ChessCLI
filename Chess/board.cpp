@@ -1,5 +1,6 @@
 #include "board.h"
 #include "VisualUtils.h"
+#include "GameInfo.h"
 #include <iostream>
 #include <conio.h>
 #include <Windows.h>
@@ -120,6 +121,7 @@ void Board::PrintBoard() const
 void Board::Move(const Coordinate source, const Coordinate dest)
 {
 	Piece* sourcePiece = board[source.row][source.collumn];
+	Piece* destPiece = board[dest.row][dest.collumn];
 	board[source.row][source.collumn] = nullptr;
 	board[dest.row][dest.collumn] = sourcePiece;
 
@@ -129,6 +131,8 @@ void Board::Move(const Coordinate source, const Coordinate dest)
 	{
 		kings_locations[sourcePiece->getColor()] = sourcePiece->getPosition();
 	}
+
+	GameInfo::atelastMove = destPiece != nullptr;
 }
 
 bool Board::IsCheck(const Color color) const

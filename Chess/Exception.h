@@ -10,6 +10,6 @@ private:
 public:
 	Exception(const ErrorCode errorCode, const std::wstring errorMessage);
 	ErrorCode GetError()const;
-	std::wstring GetMessage()const;
+	std::wstring Message()const;
 };
 

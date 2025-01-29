@@ -10,7 +10,7 @@ ErrorCode Exception::GetError() const
 	return error;
 }
 
-std::wstring Exception::GetMessage() const
+std::wstring Exception::Message() const
 {
 	return message;
 }
