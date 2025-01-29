@@ -1,6 +1,22 @@
+#pragma comment(lib, "winmm.lib")
+
 #include "GameUtils.h"
+#include <Windows.h>
+
 bool lastMoveWasCapture = false;
-PieceType pieceForCoronation = PAWN;
+PieceType pieceForCoronation = PieceType::PAWN;
+
+void GameUtils::GameSound(const bool eat)
+{
+	if (eat)
+	{
+		PlaySoundW(TEXT("Sounds\\eat.wav"), NULL, SND_FILENAME | SND_ASYNC);
+	}
+	else
+	{
+		PlaySoundW(TEXT("Sounds\\move.wav"), NULL, SND_FILENAME | SND_ASYNC);
+	}
+}
 
 singleMove GameUtils::stringToMove(std::wstring move)
 {

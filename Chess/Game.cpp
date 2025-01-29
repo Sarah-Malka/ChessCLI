@@ -1,10 +1,7 @@
-#pragma comment(lib, "winmm.lib")
-
 #include "Game.h"
 #include <iostream>
 #include "GameUtils.h"
 #include "Exception.h"
-#include <Windows.h>
 
 std::vector<Piece*> Game::GetPossiblePiecesToMove(const singleMove move) const
 {
@@ -89,14 +86,7 @@ void Game::Start()
 			}
 			Piece* pieceToMove = possiblePieces[0];
 			board.Move(pieceToMove->getPosition(), move.destination);
-			if (GameInfo::atelastMove)
-			{
-				PlaySoundW(TEXT("Sounds\\eat.wav"), NULL, SND_FILENAME | SND_ASYNC);
-			}
-			else
-			{
-				PlaySoundW(TEXT("Sounds\\move.wav"), NULL, SND_FILENAME | SND_ASYNC);
-			}
+			GameUtils::GameSound(GameInfo::atelastMove);
 			invalid_input = false;
 			GameInfo::WhiteToPlay = !GameInfo::WhiteToPlay;
 		}

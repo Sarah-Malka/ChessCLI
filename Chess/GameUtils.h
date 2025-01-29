@@ -7,6 +7,7 @@ class GameUtils
 {
 
 public:
+	static void GameSound(const bool eat);
 	static singleMove stringToMove(std::wstring move);
 private:
 	static std::wstring removeUnnececeryEnding(std::wstring move);
