@@ -20,7 +20,10 @@ public:
 public:
 	Board();
 	std::vector<Piece*>& operator[](std::size_t index);
-	const std::vector<Piece*> operator[](std::size_t index) const;	
+	const std::vector<Piece*> operator[](std::size_t index) const;
+
+	Piece*& operator[](Coordinate position);
+	Piece* const operator[](Coordinate position) const;
 	void PrintBoard() const;
 	void Move(const Coordinate source, const Coordinate dest);
 };

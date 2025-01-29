@@ -1,2 +1,10 @@
-﻿  Piece.cpp
+﻿  Game.cpp
+  GameInfo.cpp
+  Piece.cpp
+C:\Users\שרה מלכה\source\repos\Chess\Chess\Piece.cpp(184,20): warning C4018: '<': signed/unsigned mismatch
+  board.cpp
+  main.cpp
+  Generating Code...
+C:\Users\שרה מלכה\source\repos\Chess\Chess\Piece.cpp(20): warning C4715: 'Piece::IsEatingHisColor': not all control paths return a value
+C:\Users\שרה מלכה\source\repos\Chess\Chess\Piece.cpp(159): warning C4715: 'Pawn::IsValidPieceMove': not all control paths return a value
   Chess.vcxproj -> C:\Users\שרה מלכה\source\repos\Chess\Debug\Chess.exe

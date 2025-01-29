@@ -175,3 +175,39 @@ bool Bishop::IsValidPieceMove(Coordinate targetPosition, const Board& board) con
 	}
 	return false;
 }
+	}
+}
+
+bool Rock::IsValidPieceMove(Coordinate targetPosition, const Board& board) const
+{
+	if (targetPosition.row != position.row && targetPosition.collumn != position.collumn)
+	{
+		return false;
+	}
+
+	std::vector<Coordinate> squaresInTheWay;
+	if (position.collumn == targetPosition.collumn)
+	{
+		for (uint8_t i = std::min(position.row, targetPosition.row) + 1; i < std::max(position.row, targetPosition.row); i++)
+		{
+			squaresInTheWay.push_back(Coordinate{ i, position.collumn });
+		}
+	}
+	else
+	{
+		for (uint8_t i = std::min(position.collumn, targetPosition.collumn) + 1; i < std::max(position.collumn, targetPosition.collumn); i++)
+		{
+			squaresInTheWay.push_back(Coordinate{ position.row, i });
+		}
+	}
+
+	for (int i = 0; i < squaresInTheWay.size(); i++)
+	{
+		if (board[squaresInTheWay[i]] != nullptr)
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
