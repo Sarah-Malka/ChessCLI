@@ -1,10 +1,11 @@
 #pragma once
 #include "GameInfo.h"
+#include "board.h"
 
 class Game
 {
 private:
-	GameInfo game_info;
+	Board board;
 	bool invalid_input = false;
 	std::vector<Piece*> GetPossiblePiecesToMove(const singleMove move)const;
 
