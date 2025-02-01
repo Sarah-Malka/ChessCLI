@@ -118,18 +118,25 @@ void Board::PrintBoard() const
 
 }
 
-void Board::Move(const Coordinate source, const Coordinate dest)
+void Board::Move(const Coordinate source, const singleMove move)
 {
 	Piece* sourcePiece = board[source.row][source.collumn];
-	Piece* destPiece = board[dest.row][dest.collumn];
+	Piece* destPiece = board[move.destination.row][move.destination.collumn];
 	board[source.row][source.collumn] = nullptr;
-	board[dest.row][dest.collumn] = sourcePiece;
+	board[move.destination.row][move.destination.collumn] = sourcePiece;
 
-	sourcePiece->Move(dest);
+	sourcePiece->Move(move.destination);
 
 	if (sourcePiece->getType() == PieceType::KING)
 	{
 		kings_locations[sourcePiece->getColor()] = sourcePiece->getPosition();
+	}
+
+	if (shouldCoronate(move))
+	{
+		(*this)[move.destination] = sourcePiece->GetPiece(move.coronationRequest);
+		delete sourcePiece;
+		sourcePiece = nullptr;
 	}
 
 	GameInfo::atelastMove = destPiece != nullptr;
@@ -161,10 +168,10 @@ bool Board::IsCheck(const Color color) const
 	return false;
 }
 
-bool Board::WillCauseCheck(const Color color, const Coordinate source, const Coordinate dest) const
+bool Board::WillCauseCheck(const Color color, const Coordinate source, const singleMove move) const
 {
 	Board copy_board(*this);
-	copy_board.Move(source, dest);
+	copy_board.Move(source, move);
 	return copy_board.IsCheck(color);
 }
 
@@ -197,9 +204,23 @@ Board::Board(const Board& other)
 				board[i][j] == nullptr;
 				continue;
 			}
-			board[i][j] = other.board[i][j]->GetCopy();
+			board[i][j] = otherPiece->GetPiece(otherPiece->getType());
 		}
 	}
+}
+
+bool Board::shouldCoronate(singleMove move)
+{
+	if (move.originalPiece != PieceType::PAWN)
+	{
+		return false;
+	}
+	if (!(move.destination.row == 7 && GameInfo::WhiteToPlay) && !(move.destination.row == 0 && !GameInfo::WhiteToPlay))
+	{
+		return false;
+	}
+
+	return true;
 }
 
 array2D Board::GetToInitialState()

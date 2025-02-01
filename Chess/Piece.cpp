@@ -19,7 +19,7 @@ bool Piece::IsEatingHisColor(const Coordinate targetPosition, const Board& board
 	}
 }
 
-Piece* Piece::GetCopy()
+Piece* Piece::GetPiece(const PieceType type) const
 {
 	switch (type)
 	{

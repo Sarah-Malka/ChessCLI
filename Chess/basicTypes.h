@@ -14,7 +14,8 @@ enum PieceType : uint8_t
 	ROCK,
 	BISHOP,
 	KNIGHT,
-	PAWN
+	PAWN,
+	INVALID
 
 };
 struct Coordinate

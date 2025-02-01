@@ -31,7 +31,7 @@ std::vector<Piece*> Game::GetPossiblePiecesToMove(const singleMove move) const
 				continue;
 			}
 			
-			if (board.WillCauseCheck(colorToPlay, piece->getPosition(), move.destination))
+			if (board.WillCauseCheck(colorToPlay, piece->getPosition(), move))
 			{
 				continue;
 			}
@@ -86,7 +86,7 @@ void Game::Start()
 				throw Exception(ErrorCode::MoreThanOneCompatiblePiece, L"Ambigious command, more than one piece can do this move");
 			}
 			Piece* pieceToMove = possiblePieces[0];
-			board.Move(pieceToMove->getPosition(), move.destination);
+			board.Move(pieceToMove->getPosition(), move);
 			//check if coronation needs to happen, if no coronation request was submitted but a pawn is on 8 or 1 rank, handle
 			GameUtils::GameSound(GameInfo::atelastMove);
 			Sleep(130);

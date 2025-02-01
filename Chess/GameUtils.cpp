@@ -29,7 +29,7 @@ singleMove GameUtils::stringToMove(std::wstring move)
 	ret.destination.collumn = 0;
 	ret.destination.row = 0;
 	ret.originalPiece = PieceType::PAWN;
-	ret.coronationRequest = PieceType::PAWN;
+	ret.coronationRequest = PieceType::INVALID;
 
 	if (move.empty())
 	{
@@ -77,26 +77,28 @@ singleMove GameUtils::stringToMove(std::wstring move)
 	if (move.length() > 2)
 	{
 		size_t len = move.length();
-		if (move[len - 1] == L'=')
+		if (move[len - 2] == L'=')
 		{
-			if (move[len] == L'Q' || move[len] == L'q')
+			switch (move[len-1])
 			{
-				ret.coronationRequest = PieceType::QUEEN;
-			}
-			if (move[len] == L'R' || move[len] == L'r')
-			{
-				ret.coronationRequest = PieceType::ROCK;
-			}
-			if (move[len] == L'B' || move[len] == L'b')
-			{
-				ret.coronationRequest = PieceType::BISHOP;
-			}
-			if (move[len] == L'N' || move[len] == L'n')
-			{
+			case L'N':
+			case L'n':
 				ret.coronationRequest = PieceType::KNIGHT;
+				break;
+			case L'B':
+			case L'b':
+				ret.coronationRequest = PieceType::BISHOP;
+				break;
+			case L'R':
+			case L'r':
+				ret.coronationRequest = PieceType::ROCK;
+				break;
+			default:
+				ret.coronationRequest = PieceType::QUEEN;
 			}
 		}
 	}
+
 
 	move = removeUnnececeryEnding(move); // use to alarm player that took or gave check without knowing?
 	if (move[0] == L'x')

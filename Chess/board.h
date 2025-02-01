@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "Piece.h"
+#include "types.h"
 
 using array2D = std::vector<std::vector<Piece*>>;
 
@@ -11,6 +12,7 @@ private:
 	std::vector<Coordinate> kings_locations;
 
 	Board(const Board& other);
+	bool shouldCoronate(singleMove move);
 
 public:
 	array2D board;
@@ -28,7 +30,7 @@ public:
 	Piece*& operator[](Coordinate position);
 	Piece* const operator[](Coordinate position) const;
 	void PrintBoard() const;
-	void Move(const Coordinate source, const Coordinate dest);
+	void Move(const Coordinate source, const singleMove move);
 	bool IsCheck(const Color color) const;
-	bool WillCauseCheck(const Color color, const Coordinate source, const Coordinate dest) const;
+	bool WillCauseCheck(const Color color, const Coordinate source, const singleMove move) const;
 };
