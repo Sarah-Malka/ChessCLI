@@ -29,7 +29,7 @@ singleMove GameUtils::stringToMove(std::wstring move)
 	ret.destination.collumn = 0;
 	ret.destination.row = 0;
 	ret.originalPiece = PieceType::PAWN;
-	ret.coronationRequest = PieceType::INVALID;
+	ret.coronationRequest = PieceType::QUEEN;
 
 	if (move.empty())
 	{
