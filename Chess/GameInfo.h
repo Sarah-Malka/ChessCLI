@@ -8,14 +8,14 @@ public:
 
 	static bool atelastMove;
 
-	bool whiteKingMoved = false;
-	bool a1WhiteRockMoved = false;
-	bool a8WhiteRockMoved = false;
+	static bool whiteKingMoved;
+	static bool a1WhiteRockMoved;
+	static bool a8WhiteRockMoved;
 
-	bool blackKingMoved = false;
-	bool h1BlackRockMoved = false;
-	bool h8BlackRockMoved = false;
+	static bool blackKingMoved;
+	static bool h1BlackRockMoved;
+	static bool h8BlackRockMoved;
 
-	bool lastMoveWasDoubleMoveByPawn = false;//should save the location of that pawn?
+	static bool lastMoveWasDoubleMoveByPawn;//should save the location of that pawn?
 };
 

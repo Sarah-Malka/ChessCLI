@@ -12,5 +12,5 @@ public:
 private:
 	static std::wstring removeUnnececeryEnding(std::wstring move);
 	static std::wstring removeX(std::wstring move);
-
+	static singleMove getInvalidMove();
 };
