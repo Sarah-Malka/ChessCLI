@@ -16,7 +16,7 @@ protected:
 public: 
 	Piece(PieceType type, Color color, Coordinate position);
 	Piece(PieceType type, Color color, uint8_t row, uint8_t colomn);
-	Piece* GetCopy();
+	Piece* GetPiece(const PieceType type) const;
 
 	PieceType getType() const;
 	Color getColor() const;

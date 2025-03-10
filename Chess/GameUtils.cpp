@@ -49,6 +49,7 @@ singleMove GameUtils::stringToMove(std::wstring move)
 	
 	// define return var
 	singleMove ret = getInvalidMove();
+	ret.coronationRequest = PieceType::QUEEN;
 
 	try
 	{
