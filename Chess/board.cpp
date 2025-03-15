@@ -145,6 +145,8 @@ void Board::Move(const Coordinate source, const singleMove move)
 bool Board::IsCheck(const Color color) const
 {
 	Coordinate king_location = kings_locations[color];
+	singleMove captureKing;
+	captureKing.destination = king_location;
 
 	for (int i = 0; i < 8; i++)
 	{
@@ -158,7 +160,7 @@ bool Board::IsCheck(const Color color) const
 			{
 				continue;
 			}
-			if (board[i][j]->IsValidMove(king_location, *this))
+			if (board[i][j]->IsValidMove(captureKing, *this))
 			{
 				return true;
 			}

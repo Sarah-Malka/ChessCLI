@@ -2,6 +2,7 @@
 #include "exception.h"
 #include "board.h"
 #include <cmath>
+#include "GameInfo.h"
 
 bool Piece::IsStaying(const Coordinate targetPosition) const
 {
@@ -40,8 +41,9 @@ Piece* Piece::GetPiece(const PieceType type) const
 	}
 }
 
-bool Piece::IsValidMove(const Coordinate targetPosition, const Board& board) const
+bool Piece::IsValidMove(const singleMove move, const Board& board) const
 {
+	const Coordinate targetPosition = move.destination;
 	if (IsStaying(targetPosition))
 	{
 		return false;
@@ -50,7 +52,7 @@ bool Piece::IsValidMove(const Coordinate targetPosition, const Board& board) con
 	{
 		return false;
 	}
-	return IsValidPieceMove(targetPosition, board);
+	return IsValidPieceMove(move, board);
 }
 
 Piece::Piece(const PieceType type, const Color color, const Coordinate position)
@@ -92,22 +94,43 @@ Coordinate Piece::getPosition() const
 	return position;
 }
 
-bool King::IsValidPieceMove(Coordinate targetPosition, const Board& board) const
+bool King::IsValidPieceMove(const singleMove move, const Board& board) const
 {
-	if (std::abs(position.row - targetPosition.row) > 1 || std::abs(position.collumn - targetPosition.collumn) > 1)
+	if (move.isCastlation)
+	{
+		if ((GameInfo::WhiteToPlay && GameInfo::whiteKingMoved) || (!GameInfo::WhiteToPlay && GameInfo::blackKingMoved))
+		{
+			return false; // TODO: make sure king move is changing the GameInfo::blackKingMoved value (same with the rocks)
+			// TODO: complete castling logic and checks.
+		}
+		if (GameInfo::WhiteToPlay && ((move.destination.collumn == 6 && GameInfo::a8WhiteRockMoved) || (move.destination.collumn == 2 && GameInfo::a1WhiteRockMoved)))
+		{
+			return false;
+		}
+		if (!GameInfo::WhiteToPlay && ((move.destination.collumn == 6 && GameInfo::h8BlackRockMoved) || (move.destination.collumn == 2 && GameInfo::h1BlackRockMoved)))
+		{
+			return false;
+		}
+
+		//if (GameInfo::WhiteToPlay && there is nothing between the king and rock)
+		//if (!GameInfo::WhiteToPlay && there is nothing between the king and rock)
+
+		//if(king and two other squares are not in check)
+	}
+	if (std::abs(position.row - move.destination.row) > 1 || std::abs(position.collumn - move.destination.collumn) > 1)
 	{
 		return false;
 	}
 
 	return true;
 }
-bool Pawn::IsValidPieceMove(Coordinate targetPosition, const Board& board) const // unfinished
+bool Pawn::IsValidPieceMove(const singleMove move, const Board& board) const // unfinished
 {
 	if (this->color == Color::WHITE)
 	{
-		if (this->position.collumn == targetPosition.collumn) // not a capture
+		if (this->position.collumn == move.destination.collumn) // not a capture
 		{
-			if (this->position.row + 2 == targetPosition.row) // first time the pawn has moved?
+			if (this->position.row + 2 == move.destination.row) // first time the pawn has moved?
 			{
 				if (this->position.row == 1 && board[this->position.row + 1][this->position.collumn] == nullptr && board[this->position.row + 2][this->position.collumn] == nullptr)// note that the row and collumn are in this order
 				{
@@ -115,24 +138,24 @@ bool Pawn::IsValidPieceMove(Coordinate targetPosition, const Board& board) const
 				}
 				return false;
 			}
-			else if (this->position.row + 1 == targetPosition.row && board[this->position.row + 1][this->position.collumn] == nullptr)
+			else if (this->position.row + 1 == move.destination.row && board[this->position.row + 1][this->position.collumn] == nullptr)
 			{
 				// something something queenning something?
 				return true;
 			}
 			return false;
 		}
-		else if (this->position.collumn != targetPosition.collumn) // this is a capture
+		else if (this->position.collumn != move.destination.collumn) // this is a capture
 		{
-			if (this->position.collumn + 1 != targetPosition.collumn && this->position.collumn - 1 != targetPosition.collumn) //move exactly one to the side
+			if (this->position.collumn + 1 != move.destination.collumn && this->position.collumn - 1 != move.destination.collumn) //move exactly one to the side
 			{
 				return false;
 			}
-			if (this->position.row + 1 != targetPosition.row)
+			if (this->position.row + 1 != move.destination.row)
 			{
 				return false;
 			}
-			if (board[targetPosition.row][targetPosition.collumn] == nullptr) //make sure there's something to eat
+			if (board[move.destination.row][move.destination.collumn] == nullptr) //make sure there's something to eat
 			{
 				// here goes some logic to allow en-passant
 				return false;
@@ -143,9 +166,9 @@ bool Pawn::IsValidPieceMove(Coordinate targetPosition, const Board& board) const
 	}
 	else if (this->color == Color::BLACK)
 	{
-		if (this->position.collumn == targetPosition.collumn) // not a capture
+		if (this->position.collumn == move.destination.collumn) // not a capture
 		{
-			if (this->position.row - 2 == targetPosition.row) // first time the pawn has moved?
+			if (this->position.row - 2 == move.destination.row) // first time the pawn has moved?
 			{
 				if (this->position.row == 6 && board[this->position.row - 1][this->position.collumn] == nullptr && board[this->position.row - 2][this->position.collumn] == nullptr)// note that the row and collumn are in this order
 				{
@@ -153,24 +176,24 @@ bool Pawn::IsValidPieceMove(Coordinate targetPosition, const Board& board) const
 				}
 				return false;
 			}
-			else if (this->position.row - 1 == targetPosition.row && board[this->position.row - 1][this->position.collumn] == nullptr)
+			else if (this->position.row - 1 == move.destination.row && board[this->position.row - 1][this->position.collumn] == nullptr)
 			{
 				// something something queenning something?
 				return true;
 			}
 			return false;
 		}
-		else if (this->position.collumn != targetPosition.collumn) // this is a capture
+		else if (this->position.collumn != move.destination.collumn) // this is a capture
 		{
-			if (this->position.collumn - 1 != targetPosition.collumn && this->position.collumn + 1 != targetPosition.collumn) //move exactly one to the side
+			if (this->position.collumn - 1 != move.destination.collumn && this->position.collumn + 1 != move.destination.collumn) //move exactly one to the side
 			{
 				return false;
 			}
-			if (this->position.row - 1 != targetPosition.row)
+			if (this->position.row - 1 != move.destination.row)
 			{
 				return false;
 			}
-			if (board[targetPosition.row][targetPosition.collumn] == nullptr) //make sure there's something to eat
+			if (board[move.destination.row][move.destination.collumn] == nullptr) //make sure there's something to eat
 			{
 				// here goes some logic to allow en-passant
 				return false;
@@ -179,26 +202,26 @@ bool Pawn::IsValidPieceMove(Coordinate targetPosition, const Board& board) const
 		}
 	}
 }
-bool Knight::IsValidPieceMove(Coordinate targetPosition, const Board& board) const
+bool Knight::IsValidPieceMove(const singleMove move, const Board& board) const
 {
-	if (((abs(targetPosition.row - this->position.row) == 2) && (abs(targetPosition.collumn - this->position.collumn) == 1)) xor ((abs(targetPosition.row - this->position.row) == 1) && (abs(targetPosition.collumn - this->position.collumn) == 2)))
+	if (((abs(move.destination.row - this->position.row) == 2) && (abs(move.destination.collumn - this->position.collumn) == 1)) xor ((abs(move.destination.row - this->position.row) == 1) && (abs(move.destination.collumn - this->position.collumn) == 2)))
 	{
 		return true;
 	}
 	return false;
 }
-bool Bishop::IsValidPieceMove(Coordinate targetPosition, const Board& board) const
+bool Bishop::IsValidPieceMove(const singleMove move, const Board& board) const
 {
-	if (!((this->position.row - this->position.collumn) == (targetPosition.row - targetPosition.collumn)) xor ((this->position.row + this->position.collumn) == (targetPosition.row + targetPosition.collumn)))
+	if (!((this->position.row - this->position.collumn) == (move.destination.row - move.destination.collumn)) xor ((this->position.row + this->position.collumn) == (move.destination.row + move.destination.collumn)))
 	{	
 		return false;
 	}
 	//check if diagnol is empty
 	std::vector<Coordinate> squaresInTheWay;
-	if (this->position.row - this->position.collumn == targetPosition.row - targetPosition.collumn) //a1 to h8 type diagnal
+	if (this->position.row - this->position.collumn == move.destination.row - move.destination.collumn) //a1 to h8 type diagnal
 	{
-		int squareDiff = targetPosition.row - targetPosition.collumn;
-		for (uint8_t i = std::min(position.row, targetPosition.row) + 1; i < std::max(position.row, targetPosition.row); i++) // add 1 to initial i to not chech the original square
+		int squareDiff = move.destination.row - move.destination.collumn;
+		for (uint8_t i = std::min(position.row, move.destination.row) + 1; i < std::max(position.row, move.destination.row); i++) // add 1 to initial i to not chech the original square
 		{
 
 			squaresInTheWay.push_back(Coordinate{ i, unsigned char(i - squareDiff) }); //{row,collumn}
@@ -206,8 +229,8 @@ bool Bishop::IsValidPieceMove(Coordinate targetPosition, const Board& board) con
 	}
 	else // a8 to h1 type diagnal
 	{
-		int squareDiff = targetPosition.row + targetPosition.collumn;
-		for (uint8_t i = std::min(position.row, targetPosition.row) + 1; i < std::max(position.row, targetPosition.row); i++)
+		int squareDiff = move.destination.row + move.destination.collumn;
+		for (uint8_t i = std::min(position.row, move.destination.row) + 1; i < std::max(position.row, move.destination.row); i++)
 		{
 			squaresInTheWay.push_back(Coordinate{ i, unsigned char(squareDiff - i) });
 		}
@@ -223,24 +246,24 @@ bool Bishop::IsValidPieceMove(Coordinate targetPosition, const Board& board) con
 
 	return true;
 }
-bool Rock::IsValidPieceMove(Coordinate targetPosition, const Board& board) const
+bool Rock::IsValidPieceMove(const singleMove move, const Board& board) const
 {
-	if (targetPosition.row != position.row && targetPosition.collumn != position.collumn)
+	if (move.destination.row != position.row && move.destination.collumn != position.collumn)
 	{
 		return false;
 	}
 
 	std::vector<Coordinate> squaresInTheWay;
-	if (position.collumn == targetPosition.collumn)
+	if (position.collumn == move.destination.collumn)
 	{
-		for (uint8_t i = std::min(position.row, targetPosition.row) + 1; i < std::max(position.row, targetPosition.row); i++)
+		for (uint8_t i = std::min(position.row, move.destination.row) + 1; i < std::max(position.row, move.destination.row); i++)
 		{
 			squaresInTheWay.push_back(Coordinate{ i, position.collumn });
 		}
 	}
 	else
 	{
-		for (uint8_t i = std::min(position.collumn, targetPosition.collumn) + 1; i < std::max(position.collumn, targetPosition.collumn); i++)
+		for (uint8_t i = std::min(position.collumn, move.destination.collumn) + 1; i < std::max(position.collumn, move.destination.collumn); i++)
 		{
 			squaresInTheWay.push_back(Coordinate{ position.row, i });
 		}
@@ -256,10 +279,10 @@ bool Rock::IsValidPieceMove(Coordinate targetPosition, const Board& board) const
 
 	return true;
 }
-bool Queen::IsValidPieceMove(Coordinate targetPosition, const Board& board) const
+bool Queen::IsValidPieceMove(const singleMove move, const Board& board) const
 {
 	Rock rock(color, position);
 	Bishop bishop(color, position);
 
-	return (rock.IsValidMove(targetPosition, board) || bishop.IsValidMove(targetPosition, board));
+	return (rock.IsValidMove(move, board) || bishop.IsValidMove(move, board));
 }

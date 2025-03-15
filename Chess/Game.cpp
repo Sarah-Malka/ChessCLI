@@ -26,7 +26,7 @@ std::vector<Piece*> Game::GetPossiblePiecesToMove(const singleMove move) const
 				continue;
 			}
 
-			if (!piece->IsValidMove(move.destination, board))
+			if (!piece->IsValidMove(move, board))
 			{
 				continue;
 			}
@@ -72,6 +72,9 @@ void Game::Start()
 		std::wcout << L"Enter " << (GameInfo::WhiteToPlay ? L"white's " : L"black's ") << L"move: " << std::endl;
 		std::wstring str_move = L"";
 		std::wcin >> str_move;
+		if (std::wcin.eof()) break; // quit if Ctrl+Z
+		// TODO: handle Ctrl Z issues (valid move+ctrl z behaves weird)
+
 
 		try
 		{
