@@ -144,7 +144,11 @@ void Board::Move(const Coordinate source, const singleMove move)
 
 bool Board::IsCheck(const Color color) const
 {
-	Coordinate king_location = kings_locations[color];
+	return IsCheck(color, kings_locations[color]);
+}
+
+bool Board::IsCheck(const Color color, Coordinate king_location) const
+{
 	singleMove captureKing;
 	captureKing.destination = king_location;
 
@@ -187,7 +191,7 @@ bool Board::isStalemate()
 	return false;
 }
 
-Board::Board(const Board& other)
+Board::Board(const Board& other) // copy constructor
 	: kings_locations(other.kings_locations)
 {
 	board.resize(8);
@@ -203,7 +207,7 @@ Board::Board(const Board& other)
 			Piece* otherPiece = other.board[i][j];
 			if (otherPiece == nullptr)
 			{
-				board[i][j] == nullptr;
+				board[i][j] = nullptr;
 				continue;
 			}
 			board[i][j] = otherPiece->GetPiece(otherPiece->getType());

@@ -98,25 +98,50 @@ bool King::IsValidPieceMove(const singleMove move, const Board& board) const
 {
 	if (move.isCastlation)
 	{
+		bool isKingSideCastelation = move.destination.collumn == 6;
+		// no king has moved
 		if ((GameInfo::WhiteToPlay && GameInfo::whiteKingMoved) || (!GameInfo::WhiteToPlay && GameInfo::blackKingMoved))
 		{
-			return false; // TODO: make sure king move is changing the GameInfo::blackKingMoved value (same with the rocks)
-			// TODO: complete castling logic and checks.
-		}
-		if (GameInfo::WhiteToPlay && ((move.destination.collumn == 6 && GameInfo::a8WhiteRockMoved) || (move.destination.collumn == 2 && GameInfo::a1WhiteRockMoved)))
-		{
 			return false;
+			// TODO: make sure king move is changing the GameInfo::blackKingMoved value (same with the rocks)
 		}
-		if (!GameInfo::WhiteToPlay && ((move.destination.collumn == 6 && GameInfo::h8BlackRockMoved) || (move.destination.collumn == 2 && GameInfo::h1BlackRockMoved)))
+
+		// relevant Rock hasn't moved (white)
+		if (GameInfo::WhiteToPlay && ((isKingSideCastelation && GameInfo::a8WhiteRockMoved) || (!isKingSideCastelation && GameInfo::a1WhiteRockMoved)))
 		{
 			return false;
 		}
 
-		//if (GameInfo::WhiteToPlay && there is nothing between the king and rock)
-		//if (!GameInfo::WhiteToPlay && there is nothing between the king and rock)
+		// relevant Rock hasn't moved (black)
+		if (!GameInfo::WhiteToPlay && ((isKingSideCastelation && GameInfo::h8BlackRockMoved) || (!isKingSideCastelation && GameInfo::h1BlackRockMoved)))
+		{
+			return false; 
+		}
 
-		//if(king and two other squares are not in check)
+		Color colorToPlay = GameInfo::WhiteToPlay ? Color::WHITE : Color::BLACK;
+
+		//there is nothing between King and Rock
+		for (uint8_t i = !isKingSideCastelation ? 1 : 5; i < (!isKingSideCastelation ? 4:7); i++)
+		{
+			Coordinate coor = { GameInfo::WhiteToPlay ? 0 : 7, i };
+			if (board[coor] != nullptr)
+			{
+				return false;
+			}
+		}
+
+		// there is no check in kingSquare to destinationSquare
+		for (uint8_t i = std::min(position.collumn, move.destination.collumn); i <= std::max(position.collumn, move.destination.collumn); i++)
+		{
+			Coordinate coor = { GameInfo::WhiteToPlay ? 0 : 7, i };
+			if (board.IsCheck(colorToPlay, coor))
+			{
+				return false;
+			}
+		}
+		return true;
 	}
+
 	if (std::abs(position.row - move.destination.row) > 1 || std::abs(position.collumn - move.destination.collumn) > 1)
 	{
 		return false;

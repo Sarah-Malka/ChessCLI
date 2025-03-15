@@ -9,5 +9,5 @@ public:
 	Coordinate destination;
 	PieceType originalPiece;
 	PieceType coronationRequest;
-	bool isCastlation;
+	bool isCastlation = false;
 };

@@ -32,5 +32,6 @@ public:
 	void PrintBoard() const;
 	void Move(const Coordinate source, const singleMove move);
 	bool IsCheck(const Color color) const;
+	bool IsCheck(const Color color, Coordinate sqr) const;
 	bool WillCauseCheck(const Color color, const Coordinate source, const singleMove move) const;
 };
