@@ -15,8 +15,7 @@ enum class ErrorCode //Order Is important
 	IllegalCheckExposureDuringCastlation,
 	KingCanMoveOnlyOneSquare,
 
-	
-	CannotGoTrhoughOtherPieces,
+	CannotGoThroughOtherPieces,
 	RockMustStayInRowOrColumn,
 	BishopMustStayInHisDiagonal,
 
@@ -50,7 +49,7 @@ static std::map<ErrorCode, std::wstring> errorCodeToMessage = {
 	{ErrorCode::KingCanMoveOnlyOneSquare, L"KingCanMoveOnlyOneSquare"},
 	{ErrorCode::RockMustStayInRowOrColumn, L"RockMustStayInRowOrColumn"},
 	{ErrorCode::BishopMustStayInHisDiagonal, L"BishopMustStayInHisDiagonal"},
-	{ErrorCode::CannotGoTrhoughOtherPieces, L"CannotGoTrhoughOtherPieces"},
+	{ErrorCode::CannotGoThroughOtherPieces, L"CannotGoThroughOtherPieces"},
 	{ErrorCode::PawnAlreadyMoved, L"PawnAlreadyMoved"},
 	{ErrorCode::PawnMustMoveForward, L"PawnMustMoveForward"},
 	{ErrorCode::PawnCanMoveOnlyOneSquare, L"PawnCanMoveOnlyOneSquare"},

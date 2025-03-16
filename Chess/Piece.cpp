@@ -65,7 +65,7 @@ Piece::Piece(const PieceType type, const Color color, const Coordinate position)
 {
 	if (position.row > 7 || position.collumn > 7)
 	{
-		throw Exception(ErrorCode::PositionOutOfBoard, L"Postition out of board");
+		throw Exception(ErrorCode::PositionOutOfBoard, L"Position out of board");
 	}
 	this->position.collumn = position.collumn;
 	this->position.row = position.row;
@@ -168,7 +168,7 @@ ErrorCode Pawn::IsValidDoubleStep(const singleMove move, const Board& board) con
 	Coordinate squareInTheWay = { color == Color::WHITE ? 2 : 5, position.collumn }; // note that the row and collumn are in this order
 	if (board[squareInTheWay] != nullptr)
 	{
-		return ErrorCode::CannotGoTrhoughOtherPieces;
+		return ErrorCode::CannotGoThroughOtherPieces;
 	}
 	return ErrorCode::Success;
 }
@@ -282,7 +282,7 @@ ErrorCode Bishop::IsValidPieceMove(const singleMove move, const Board& board) co
 	{
 		if (board[squaresInTheWay[i]] != nullptr)
 		{
-			return ErrorCode::CannotGoTrhoughOtherPieces;
+			return ErrorCode::CannotGoThroughOtherPieces;
 		}
 	}
 
@@ -315,7 +315,7 @@ ErrorCode Rock::IsValidPieceMove(const singleMove move, const Board& board) cons
 	{
 		if (board[squaresInTheWay[i]] != nullptr)
 		{
-			return ErrorCode::CannotGoTrhoughOtherPieces;
+			return ErrorCode::CannotGoThroughOtherPieces;
 		}
 	}
 
@@ -333,9 +333,9 @@ ErrorCode Queen::IsValidPieceMove(const singleMove move, const Board& board) con
 		return ErrorCode::Success;
 	}
 
-	if (rock_move == ErrorCode::CannotGoTrhoughOtherPieces || bishop_move == ErrorCode::CannotGoTrhoughOtherPieces)
+	if (rock_move == ErrorCode::CannotGoThroughOtherPieces || bishop_move == ErrorCode::CannotGoThroughOtherPieces)
 	{
-		return ErrorCode::CannotGoTrhoughOtherPieces;
+		return ErrorCode::CannotGoThroughOtherPieces;
 	}
 
 	return ErrorCode::InvalidQueenMove;
