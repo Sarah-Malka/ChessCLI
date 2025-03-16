@@ -164,7 +164,7 @@ bool Board::IsCheck(const Color color, Coordinate king_location) const
 			{
 				continue;
 			}
-			if (board[i][j]->IsValidMove(captureKing, *this))
+			if (board[i][j]->IsValidMove(captureKing, *this) == ErrorCode::Success)
 			{
 				return true;
 			}

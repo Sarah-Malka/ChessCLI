@@ -7,7 +7,8 @@ class Game
 private:
 	Board board;
 	bool invalid_input = false;
-	std::vector<Piece*> GetPossiblePiecesToMove(const singleMove move)const;
+	ErrorCode last_relevant_move_error = ErrorCode::Success;
+	std::vector<Piece*> GetPossiblePiecesToMove(const singleMove move);
 
 public:
 	void Start();

@@ -4,9 +4,12 @@
 #include "Exception.h"
 #include <Windows.h>
 
-std::vector<Piece*> Game::GetPossiblePiecesToMove(const singleMove move) const
+std::vector<Piece*> Game::GetPossiblePiecesToMove(const singleMove move)
 {
+	Color colorToPlay = GameInfo::WhiteToPlay ? Color::WHITE : Color::BLACK;
+	std::vector<Piece*> possiblePiecesBeforeCheckValidation;
 	std::vector<Piece*> possiblePieces;
+
 	for (int i = 0; i < 8; i++)
 	{
 		for (int j = 0; j < 8; j++)
@@ -20,43 +23,58 @@ std::vector<Piece*> Game::GetPossiblePiecesToMove(const singleMove move) const
 			{
 				continue;
 			}
-			Color colorToPlay = GameInfo::WhiteToPlay ? Color::WHITE : Color::BLACK;
 			if (piece->getColor() != colorToPlay)
 			{
 				continue;
 			}
 
-			if (!piece->IsValidMove(move, board))
-			{
-				continue;
-			}
-			
-			if (board.WillCauseCheck(colorToPlay, piece->getPosition(), move))
-			{
-				continue;
-			}
-
 			// if player gave us the moving piece's origin location:
-			Coordinate origin = piece->getPosition();
-			if (move.origin.collumn != 10) // 10 is the agreed-upon junk value
+			if (!move.isCastlation) //if move is castling, we want a more indicative error, that will be returned in IsValidMove function
 			{
-				if (origin.collumn != move.origin.collumn)
+				Coordinate origin = piece->getPosition();
+				if (move.origin.collumn != 10) // 10 is the agreed-upon junk value
 				{
-					continue;
+					if (origin.collumn != move.origin.collumn)
+					{
+						last_relevant_move_error = ErrorCode::NoPieceFoundAtOriginPosition;
+						continue;
+					}
 				}
-			}
-			if (move.origin.row != 10)
-			{
-				if (origin.row != move.origin.row)
+				if (move.origin.row != 10)
 				{
-					continue;
+					if (origin.row != move.origin.row)
+					{
+						last_relevant_move_error = ErrorCode::NoPieceFoundAtOriginPosition;
+						continue;
+					}
 				}
 			}
 
-			possiblePieces.push_back(piece);
+			ErrorCode move_status = piece->IsValidMove(move, board);
+			if (move_status != ErrorCode::Success)
+			{
+				if (move_status < last_relevant_move_error)
+				{
+					last_relevant_move_error = move_status;
+				}
+				continue;
+			}
+
+			possiblePiecesBeforeCheckValidation.push_back(piece);
 		}
 	}
 
+	for (std::vector<Piece*>::iterator it = possiblePiecesBeforeCheckValidation.begin(); it != possiblePiecesBeforeCheckValidation.end(); ++it)
+	{
+		if (board.WillCauseCheck(colorToPlay, (*it)->getPosition(), move))
+		{
+			last_relevant_move_error = board.IsCheck(colorToPlay) ? ErrorCode::YouAreInCheck : ErrorCode::IllegalCheckExposure;
+		}
+		else
+		{
+			possiblePieces.push_back(*it);
+		}
+	}
 	return possiblePieces;
 }
 
@@ -79,14 +97,15 @@ void Game::Start()
 		try
 		{
 			singleMove move = GameUtils::stringToMove(str_move);
+			last_relevant_move_error = ErrorCode::Success;
 			std::vector<Piece*> possiblePieces = GetPossiblePiecesToMove(move);
 			if (possiblePieces.empty())
 			{
-				throw Exception(ErrorCode::NoPieceCanMove, L"There is no compatible piece");
+				throw Exception(last_relevant_move_error, L"There is no compatible piece");
 			}
 			if (possiblePieces.size() > 1)
 			{
-				throw Exception(ErrorCode::MoreThanOneCompatiblePiece, L"Ambigious command, more than one piece can do this move");
+				throw Exception(ErrorCode::MoreThanOneCompatiblePiece, L"Ambigious command");
 			}
 			Piece* pieceToMove = possiblePieces[0];
 			board.Move(pieceToMove->getPosition(), move);
@@ -99,7 +118,7 @@ void Game::Start()
 		catch (Exception ex)
 		{
 			invalid_input = true;
-			std::wcout << L"Error! ErrorCode " << (int)ex.GetError() << L": " << ex.Message() << std::endl;
+			std::wcout << ex.Message() << L". ErrorCode " << (int)ex.GetError() << L": " << errorCodeToMessage.at(ex.GetError()) << std::endl;
 			continue;
 		}
 	}
