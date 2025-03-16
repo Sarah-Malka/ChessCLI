@@ -6,5 +6,11 @@ enum class ErrorCode
 {
 	PositaionOutOfBoard = 0,
 	NoPieceCanMove,
-	MoreThanOneCompatiblePiece
+	MoreThanOneCompatiblePiece,
+	IllegalChessExposure,
+	CannotTakeHisOwnPiece,
+	TargetPositionIsCurrentPosition,
+	CannotCastleWithChess,
+	KingAlreadyMoved,
+	RockAlreadyMoved,
 };
