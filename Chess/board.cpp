@@ -161,6 +161,31 @@ void Board::Move(const Coordinate source, const singleMove move)
 	if (sourcePiece->getType() == PieceType::KING)
 	{
 		kings_locations[sourcePiece->getColor()] = sourcePiece->getPosition();
+		if (sourcePiece->getColor() == WHITE)
+		{
+			GameInfo::whiteKingMoved = true;
+		}
+		else
+		{
+			GameInfo::blackKingMoved = true;
+		}
+	}
+	if (sourcePiece->getType() == PieceType::ROCK)
+	{
+		if (sourcePiece->getColor() == WHITE)
+		{
+			if (sourcePiece->getPosition() == Coordinate{ 0,0 })
+				GameInfo::a1WhiteRockMoved = true;
+			else if (sourcePiece->getPosition() == Coordinate{ 0,7 })
+				GameInfo::a8WhiteRockMoved = true;
+		}
+		else
+		{
+			if (sourcePiece->getPosition() == Coordinate{ 7,0 })
+				GameInfo::h1BlackRockMoved = true;
+			else if (sourcePiece->getPosition() == Coordinate{ 7,7 })
+				GameInfo::h8BlackRockMoved = true;
+		}
 	}
 
 	if (shouldCoronate(move))
