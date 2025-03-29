@@ -118,14 +118,45 @@ void Board::PrintBoard() const
 
 }
 
+Coordinate GetCastlationRockSourcePosition(singleMove move)
+{
+	Coordinate rockPosition = { 10,10 };
+	bool isKingSideCastelation = move.destination.collumn == 6;
+	rockPosition.collumn = isKingSideCastelation ? 7 : 0;
+	rockPosition.row = GameInfo::WhiteToPlay ? 0 : 7;
+
+	return rockPosition;
+}
+
+Coordinate GetCastlationRockTargetPosition(singleMove move)
+{
+	Coordinate rockPosition = { 10,10 };
+	bool isKingSideCastelation = move.destination.collumn == 6;
+	rockPosition.collumn = isKingSideCastelation ? 5 : 3;
+	rockPosition.row = GameInfo::WhiteToPlay ? 0 : 7;
+
+	return rockPosition;
+}
+
 void Board::Move(const Coordinate source, const singleMove move)
 {
 	Piece* sourcePiece = board[source.row][source.collumn];
 	Piece* destPiece = board[move.destination.row][move.destination.collumn];
+
+	if (move.isCastlation)
+	{
+		Coordinate RockSourcePosition = GetCastlationRockSourcePosition(move);
+		Coordinate RockTargetPosition = GetCastlationRockTargetPosition(move);
+
+		Piece* Rock = operator[](RockSourcePosition);
+		operator[](RockSourcePosition) = nullptr;
+		operator[](RockTargetPosition) = Rock;
+		Rock->Move(RockTargetPosition);
+	}
+
 	board[source.row][source.collumn] = nullptr;
 	board[move.destination.row][move.destination.collumn] = sourcePiece;
-
-	sourcePiece->Move(move);
+	sourcePiece->Move(move.destination);
 
 	if (sourcePiece->getType() == PieceType::KING)
 	{

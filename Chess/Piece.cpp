@@ -78,9 +78,8 @@ Piece::Piece(PieceType type, Color color, uint8_t row, uint8_t colomn) :
 
 }
 
-void Piece::Move(const singleMove move)
+void Piece::Move(const Coordinate targetPosition)
 {
-	const Coordinate targetPosition = move.destination;
 	position.collumn = targetPosition.collumn;
 	position.row = targetPosition.row;
 }
