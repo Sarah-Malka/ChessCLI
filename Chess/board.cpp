@@ -125,7 +125,7 @@ void Board::Move(const Coordinate source, const singleMove move)
 	board[source.row][source.collumn] = nullptr;
 	board[move.destination.row][move.destination.collumn] = sourcePiece;
 
-	sourcePiece->Move(move.destination);
+	sourcePiece->Move(move);
 
 	if (sourcePiece->getType() == PieceType::KING)
 	{

@@ -24,7 +24,7 @@ public:
 	Coordinate getPosition() const;
 
 	ErrorCode IsValidMove(const singleMove move, const Board& board) const;
-	void Move(Coordinate targetPositiond);
+	void Move(const singleMove move);
 };
 
 class Pawn : public Piece
