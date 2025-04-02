@@ -102,11 +102,6 @@ singleMove GameUtils::stringToMove(std::wstring move)
 			move.erase(0, 1);
 		}
 
-		if (move.empty())
-		{
-			return ret; // error?
-		}
-
 		//look for coronation attempt:
 		if (move.length() >= 2)
 		{
@@ -133,15 +128,7 @@ singleMove GameUtils::stringToMove(std::wstring move)
 		}
 
 		move = removeUnnececeryEnding(move); // use to alarm player that took or gave check without knowing?
-		
-		if (move.empty())
-		{
-			return ret;
-		}
-		if (move[0] == L'x')
-		{
-			move.erase(0, 1);
-		}
+		move = removeX(move);
 
 		// handle player telling us what origin piece is moving
 		if (move.length() > 2)
@@ -158,18 +145,9 @@ singleMove GameUtils::stringToMove(std::wstring move)
 			}
 		}
 
-		if (move.empty())
-		{
-			return ret;
-		}
-		if (move[0] == L'x')
-		{
-			move.erase(0, 1);
-		}
-
 		// destination
 		if (move.length() != 2 || move[0] < L'a' || move[0] > L'h' || move[1] < L'1' || move[1] > L'8') // this will be non legit
-		{ // move length is 2 for destination and 2 for queening
+		{
 			std::cout << "No valid destination! " << std::endl;
 			return ret;
 		}
