@@ -27,7 +27,7 @@ singleMove GameUtils::getInvalidMove()
 	ret.destination.collumn = 0;
 	ret.destination.row = 0;
 	ret.originalPiece = PieceType::PAWN;
-	ret.coronationRequest = PieceType::PAWN;
+	ret.coronationRequest = PieceType::QUEEN;
 	ret.isCastlation = false;
 	
 	return ret;
@@ -49,11 +49,9 @@ singleMove GameUtils::stringToMove(std::wstring move)
 	
 	// define return var
 	singleMove ret = getInvalidMove();
-	ret.coronationRequest = PieceType::QUEEN;
 
 	try
 	{
-
 		if (move.empty())
 		{
 			std::cout << "empty move!" << std::endl;
@@ -73,7 +71,7 @@ singleMove GameUtils::stringToMove(std::wstring move)
 			return ret;
 		}
 
-		if (move[0] >= L'a' && move[0] <= L'h' && move[1] == L'x')
+		if (move[0] >= L'a' && move[0] <= L'h' && move[1] == L'x') // non-captures are dealt with later
 		{
 			ret.origin.collumn = move[0] - L'a';
 			move.erase(0, 2);
@@ -104,30 +102,25 @@ singleMove GameUtils::stringToMove(std::wstring move)
 			move.erase(0, 1);
 		}
 
-		if (move.empty())
-		{
-			return ret; // error?
-		}
-
 		//look for coronation attempt:
-		if (move.length() > 2)
+		if (move.length() >= 2)
 		{
 			size_t len = move.length();
-			if (move[len - 1] == L'=')
+			if (move[len - 2] == L'=')
 			{
-				if (move[len] == L'Q' || move[len] == L'q')
+				if (move[len - 1] == L'Q' || move[len - 1] == L'q')
 				{
 					ret.coronationRequest = PieceType::QUEEN;
 				}
-				if (move[len] == L'R' || move[len] == L'r')
+				if (move[len - 1] == L'R' || move[len - 1] == L'r')
 				{
 					ret.coronationRequest = PieceType::ROCK;
 				}
-				if (move[len] == L'B' || move[len] == L'b')
+				if (move[len - 1] == L'B' || move[len - 1] == L'b')
 				{
 					ret.coronationRequest = PieceType::BISHOP;
 				}
-				if (move[len] == L'N' || move[len] == L'n')
+				if (move[len - 1] == L'N' || move[len - 1] == L'n')
 				{
 					ret.coronationRequest = PieceType::KNIGHT;
 				}
@@ -135,14 +128,7 @@ singleMove GameUtils::stringToMove(std::wstring move)
 		}
 
 		move = removeUnnececeryEnding(move); // use to alarm player that took or gave check without knowing?
-		if (move.empty())
-		{
-
-		}
-		if (move[0] == L'x')
-		{
-			move.erase(0, 1);
-		}
+		move = removeX(move);
 
 		// handle player telling us what origin piece is moving
 		if (move.length() > 2)
@@ -158,16 +144,10 @@ singleMove GameUtils::stringToMove(std::wstring move)
 				move.erase(0, 1);
 			}
 		}
-		if (move[0] == L'x')
-		{
-			move.erase(0, 1);
-		}
 
 		// destination
 		if (move.length() != 2 || move[0] < L'a' || move[0] > L'h' || move[1] < L'1' || move[1] > L'8') // this will be non legit
 		{
-			// Error!
-			//ret.originalPiece = PAWN;
 			std::cout << "No valid destination! " << std::endl;
 			return ret;
 		}
@@ -175,33 +155,6 @@ singleMove GameUtils::stringToMove(std::wstring move)
 		ret.destination.collumn = move[0] - L'a';
 		ret.destination.row = move[1] - L'1';
 		move.erase(0, 2);
-		if (move.length() >= 2)
-		{
-			if (move[0] == L'=')
-			{
-				if (move[1] == L'Q' || move[1] == L'q')
-				{
-					pieceForCoronation = QUEEN;
-				}
-				else if (move[1] == L'R' || move[1] == L'r')
-				{
-					pieceForCoronation = ROCK;
-				}
-				else if (move[1] == L'B' || move[1] == L'b')
-				{
-					pieceForCoronation = BISHOP;
-				}
-				else if (move[1] == L'N' || move[1] == L'n')
-				{
-					pieceForCoronation = KNIGHT;
-				}
-				else if (move[1] == L'K' || move[1] == L'k')
-				{
-					pieceForCoronation = KING; // just to give a proper error message in case of a pawn trying that.
-				}
-
-			}
-		}
 	}
 	catch (...)
 	{
