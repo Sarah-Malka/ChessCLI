@@ -170,6 +170,7 @@ ErrorCode Pawn::IsValidDoubleStep(const singleMove move, const Board& board) con
 	{
 		return ErrorCode::CannotGoThroughOtherPieces;
 	}
+	GameInfo::pawnSkippedThisSquareLastTurn = {Color::WHITE ? 2 : 5, position.collumn }; // for en-passant
 	return ErrorCode::Success;
 }
 bool Pawn::DidNotMove() const
@@ -186,13 +187,12 @@ ErrorCode Pawn::IsValidCapture(const singleMove move, const Board& board) const
 	{
 		return ErrorCode::InvalidPawnMove;
 	}
-	if ((this->color == Color::WHITE && this->position.row + 1 != move.destination.row) || (this->color == Color::BLACK && this->position.row -1 != move.destination.row))
+	if ((this->color == Color::WHITE && this->position.row + 1 != move.destination.row) || (this->color == Color::BLACK && this->position.row -1 != move.destination.row)) //move exactly one forward
 	{
 		return ErrorCode::InvalidPawnMove;
 	}
-	if (board[move.destination.row][move.destination.collumn] == nullptr) //make sure there's something to eat
+	if (board[move.destination.row][move.destination.collumn] == nullptr && move.destination != GameInfo::pawnSkippedThisSquareLastTurn) //make sure there's something to eat
 	{
-		// here goes some logic to allow en-passant
 		return ErrorCode::NoOpponentPieceToEat;
 	}
 	return ErrorCode::Success;

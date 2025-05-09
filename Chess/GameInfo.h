@@ -16,6 +16,8 @@ public:
 	static bool h1BlackRockMoved;
 	static bool h8BlackRockMoved;
 
-	static bool lastMoveWasDoubleMoveByPawn;//should save the location of that pawn?
+	static Coordinate pawnSkippedThisSquareLastTurn;
+
+
 };
 

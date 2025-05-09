@@ -91,14 +91,12 @@ void Game::Start()
 		std::wstring str_move = L"";
 		std::wcin >> str_move;
 		if (std::wcin.eof()) break; // quit if Ctrl+Z
-		// TODO: handle Ctrl Z issues (valid move+ctrl z behaves weird)
-
 
 		try
 		{
-			singleMove move = GameUtils::stringToMove(str_move);
+			singleMove move = GameUtils::stringToMove(str_move); // get move Coordinates
 			last_relevant_move_error = ErrorCode::Success;
-			std::vector<Piece*> possiblePieces = GetPossiblePiecesToMove(move);
+			std::vector<Piece*> possiblePieces = GetPossiblePiecesToMove(move); // what piece might move there?
 			if (possiblePieces.empty())
 			{
 				throw Exception(last_relevant_move_error, L"There is no compatible piece");
@@ -108,8 +106,7 @@ void Game::Start()
 				throw Exception(ErrorCode::MoreThanOneCompatiblePiece, L"Ambigious command");
 			}
 			Piece* pieceToMove = possiblePieces[0];
-			board.Move(pieceToMove->getPosition(), move);
-			//check if coronation needs to happen, if no coronation request was submitted but a pawn is on 8 or 1 rank, handle
+			board.Move(pieceToMove->getPosition(), move); // the actual moving
 			GameUtils::GameSound(GameInfo::atelastMove);
 			Sleep(130);
 			invalid_input = false;

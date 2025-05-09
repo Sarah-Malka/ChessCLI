@@ -25,6 +25,9 @@ struct Coordinate
 	bool operator==(const Coordinate& other) const {
 		return (row == other.row) && (collumn == other.collumn);
 	}
+	bool operator!=(const Coordinate& other) const {
+		return !(*this == other);
+	}
 };
 
 enum class CastleType : uint8_t
