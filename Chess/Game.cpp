@@ -106,7 +106,7 @@ void Game::Start()
 				throw Exception(ErrorCode::MoreThanOneCompatiblePiece, L"Ambigious command");
 			}
 			Piece* pieceToMove = possiblePieces[0];
-			board.Move(pieceToMove->getPosition(), move); // the actual moving
+			board.Move(pieceToMove->getPosition(), move, true); // the actual moving
 			GameUtils::GameSound(GameInfo::atelastMove);
 			Sleep(130);
 			invalid_input = false;

@@ -30,7 +30,7 @@ public:
 	Piece*& operator[](Coordinate position);
 	Piece* const operator[](Coordinate position) const;
 	void PrintBoard() const;
-	void Move(const Coordinate source, const singleMove move);
+	void Move(const Coordinate source, const singleMove move, bool realMove);
 	bool IsCheck(const Color color) const;
 	bool IsCheck(const Color color, Coordinate sqr) const;
 	bool WillCauseCheck(const Color color, const Coordinate source, const singleMove move) const;

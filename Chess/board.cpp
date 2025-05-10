@@ -138,7 +138,7 @@ Coordinate GetCastlationRockTargetPosition(singleMove move)
 	return rockPosition;
 }
 
-void Board::Move(const Coordinate source, const singleMove move)
+void Board::Move(const Coordinate source, const singleMove move, bool realMove) // this is the actual moving
 {
 	Piece* sourcePiece = board[source.row][source.collumn];
 	Piece* destPiece = board[move.destination.row][move.destination.collumn];
@@ -154,10 +154,23 @@ void Board::Move(const Coordinate source, const singleMove move)
 		Rock->Move(RockTargetPosition);
 	}
 
-	board[source.row][source.collumn] = nullptr;
+	board[source.row][source.collumn] = nullptr; // because the piece moved from there
 	board[move.destination.row][move.destination.collumn] = sourcePiece;
 	sourcePiece->Move(move.destination);
 
+	if (shouldCoronate(move))
+	{
+		(*this)[move.destination] = sourcePiece->GetPiece(move.coronationRequest);
+		delete sourcePiece;
+		sourcePiece = nullptr;
+	}
+
+	if (!realMove)
+	{
+		return;
+	}
+
+	// Set global game info variables
 	if (sourcePiece->getType() == PieceType::KING)
 	{
 		kings_locations[sourcePiece->getColor()] = sourcePiece->getPosition();
@@ -187,14 +200,6 @@ void Board::Move(const Coordinate source, const singleMove move)
 				GameInfo::h8BlackRockMoved = true;
 		}
 	}
-
-	if (shouldCoronate(move))
-	{
-		(*this)[move.destination] = sourcePiece->GetPiece(move.coronationRequest);
-		delete sourcePiece;
-		sourcePiece = nullptr;
-	}
-
 	GameInfo::atelastMove = destPiece != nullptr;
 }
 
@@ -233,7 +238,7 @@ bool Board::IsCheck(const Color color, Coordinate king_location) const
 bool Board::WillCauseCheck(const Color color, const Coordinate source, const singleMove move) const
 {
 	Board copy_board(*this);
-	copy_board.Move(source, move);
+	copy_board.Move(source, move, false);
 	return copy_board.IsCheck(color);
 }
 

@@ -170,7 +170,6 @@ ErrorCode Pawn::IsValidDoubleStep(const singleMove move, const Board& board) con
 	{
 		return ErrorCode::CannotGoThroughOtherPieces;
 	}
-	GameInfo::pawnSkippedThisSquareLastTurn = {Color::WHITE ? 2 : 5, position.collumn }; // for en-passant
 	return ErrorCode::Success;
 }
 bool Pawn::DidNotMove() const
