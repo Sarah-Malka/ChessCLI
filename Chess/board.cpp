@@ -162,7 +162,7 @@ void Board::Move(const Coordinate source, const singleMove move, bool realMove) 
 	{
 		(*this)[move.destination] = sourcePiece->GetPiece(move.coronationRequest);
 		delete sourcePiece;
-		sourcePiece = nullptr;
+		sourcePiece = (*this)[move.destination];
 	}
 
 	if (!realMove)
