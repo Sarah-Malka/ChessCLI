@@ -4,6 +4,8 @@
 #include <Windows.h>
 #include "GameInfo.h"
 
+const size_t NonValideIndex = 10;
+
 bool lastMoveWasCapture = false;
 PieceType pieceForCoronation = PieceType::PAWN;
 
@@ -22,10 +24,10 @@ void GameUtils::GameSound(const bool eat)
 singleMove GameUtils::getInvalidMove()
 {
 	singleMove ret;
-	ret.origin.collumn = 10; // junk value
-	ret.origin.row = 10;
-	ret.destination.collumn = 0;
-	ret.destination.row = 0;
+	ret.origin.collumn = NonValideIndex; // junk value
+	ret.origin.row = NonValideIndex;
+	ret.destination.collumn = NonValideIndex;
+	ret.destination.row = NonValideIndex;
 	ret.originalPiece = PieceType::PAWN;
 	ret.coronationRequest = PieceType::QUEEN;
 	ret.isCastlation = false;
@@ -45,18 +47,21 @@ bool IsQueenSideCastling(const std::wstring& move)
 
 singleMove GameUtils::stringToMove(std::wstring move)
 {
-	// if the input string isn't a move, the function returns an empty move
+	// if the input string isn't a move, the function returns a defalte non-legal move
 	
 	// define return var
 	singleMove ret = getInvalidMove();
 
 	try
 	{
+		move = removeUnnececeryEnding(move); // use to alarm player that took or gave check without knowing?
+		move = removeX(move);
+
 		if (move.empty())
-		{
-			std::cout << "empty move!" << std::endl;
-			return ret; //this is a way of expressing an error. give player another turn instead.
-		}
+			{
+				std::cout << "empty move!" << std::endl;
+				return ret; //this is a way of expressing an error. give player another turn instead.
+			}
 		if (IsKingSideCastling(move) || IsQueenSideCastling(move))
 		{
 			ret.originalPiece = PieceType::KING;
@@ -71,10 +76,20 @@ singleMove GameUtils::stringToMove(std::wstring move)
 			return ret;
 		}
 
-		if (move[0] >= L'a' && move[0] <= L'h' && move[1] == L'x') // non-captures are dealt with later
+		// pawn moves
+		if (move[0] >= L'a' && move[0] <= L'h')
 		{
-			ret.origin.collumn = move[0] - L'a';
-			move.erase(0, 2);
+			if (move.length() > 1 && move[1] >= L'a' && move[1] <= L'h')
+			{
+				ret.origin.collumn = move[0] - L'a';  // what about queening to a bishop and not saying the row?
+				ret.destination.collumn = move[1] - L'a';
+				move.erase(0, 2);
+			}
+			else 
+			{
+				ret.destination.collumn = move[0] - L'a';
+				move.erase(0, 1);
+			}
 		}
 		else if (move[0] == L'K')
 		{
@@ -124,11 +139,27 @@ singleMove GameUtils::stringToMove(std::wstring move)
 				{
 					ret.coronationRequest = PieceType::KNIGHT;
 				}
+				move.pop_back();
+				move.pop_back();
 			}
 		}
 
-		move = removeUnnececeryEnding(move); // use to alarm player that took or gave check without knowing?
-		move = removeX(move);
+		// destination
+		if (!move.empty())
+		{
+			size_t len = move.length();
+			if (move[len - 1] >= L'1' && move[len - 1] <= L'8')
+			{
+				ret.destination.row = move[len - 1] - L'1';
+				move.pop_back();
+			}
+			len = move.length();
+			if (!move.empty() && move[len - 1] >= L'a' && move[len - 1] <= L'h')
+			{
+				ret.destination.collumn = move[len - 1] - L'a';
+				move.pop_back();
+			}
+		}
 
 		// handle player telling us what origin piece is moving
 		if (move.length() > 2)
@@ -145,24 +176,19 @@ singleMove GameUtils::stringToMove(std::wstring move)
 			}
 		}
 
-		// destination
-		if (move.length() != 2 || move[0] < L'a' || move[0] > L'h' || move[1] < L'1' || move[1] > L'8') // this will be non legit
-		{
-			std::cout << "No valid destination! " << std::endl;
-			return ret;
-		}
 
-		ret.destination.collumn = move[0] - L'a';
-		ret.destination.row = move[1] - L'1';
-		move.erase(0, 2);
+		// destination
+		//if (!move.empty()) // this will be non legit
+		//{
+		//	std::cout << "No valid destination! " << std::endl;
+		//	return ret;
+		//}
 	}
 	catch (...)
 	{
 		return getInvalidMove();
 	}
 
-	// if an "x" was out of place but the move was legal, mention that (and ask if sure?)
-	// if queening - need function to change the piece in the destination coordinate - to the premoted piece
 	// special moves (castling, en-passant)
 
 	return ret;
@@ -170,13 +196,16 @@ singleMove GameUtils::stringToMove(std::wstring move)
 
 std::wstring GameUtils::removeUnnececeryEnding(std::wstring move)
 {
-	while (!move.empty() && (move.back() > L'8' or move.back() < L'1'))
+	while (!move.empty() && (move.back() > L'8' or move.back() < L'1') &&
+		move.back() != L'R' &&
+		move.back() != L'r' &&
+		move.back() != L'B' &&
+		move.back() != L'b' &&
+		move.back() != L'N' &&
+		move.back() != L'n')
 	{
 		move.pop_back();
 	}
-
-	//while (move.back() == '#' || move.back() == '+')
-		// fails to "d8=Q"
 	return move;
 }
 
@@ -185,12 +214,13 @@ std::wstring GameUtils::removeX(std::wstring move)
 	uint8_t j = 0;
 	for (uint8_t i = 0; i < move.length(); i++)
 	{
-		if (move[i] != L'x') 
+		if (move[i] != L'x' && move[i] != L'X')
 		{
 			move[j++] = move[i];
 		}
 	}
-	move[j] = '\0'; // Null-terminate the modified string
+	//move[j] = '\0'; // Null-terminate the modified string
+	move.resize(j);
 
 	return move;
 }
