@@ -189,6 +189,7 @@ ErrorCode Pawn::IsValidCapture(const singleMove move, const Board& board) const
 	{
 		return ErrorCode::InvalidPawnMove;
 	}
+	//en-passant
 	if (board[move.destination.row][move.destination.collumn] == nullptr && move.destination != GameInfo::pawnSkippedThisSquareLastTurn) //make sure there's something to eat
 	{
 		return ErrorCode::NoOpponentPieceToEat;
