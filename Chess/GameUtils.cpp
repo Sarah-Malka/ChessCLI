@@ -102,7 +102,7 @@ singleMove GameUtils::stringToMove(std::wstring move)
 			move.erase(0, 1);
 		}
 
-		//look for coronation attempt:
+		// look for coronation attempt:
 		if (move.length() >= 2)
 		{
 			size_t len = move.length();

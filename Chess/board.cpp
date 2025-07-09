@@ -158,49 +158,47 @@ void Board::Move(const Coordinate source, const singleMove move, bool realMove) 
 	board[move.destination.row][move.destination.collumn] = sourcePiece;
 	sourcePiece->Move(move.destination);
 
+	if (realMove)
+	{
+		// Set global game info variables
+		if (sourcePiece->getType() == PieceType::KING)
+		{
+			kings_locations[sourcePiece->getColor()] = sourcePiece->getPosition();
+			if (sourcePiece->getColor() == WHITE)
+			{
+				GameInfo::whiteKingMoved = true;
+			}
+			else
+			{
+				GameInfo::blackKingMoved = true;
+			}
+		}
+		if (sourcePiece->getType() == PieceType::ROCK)
+		{
+			if (sourcePiece->getColor() == WHITE)
+			{
+				if (sourcePiece->getPosition() == Coordinate{ 0,0 })
+					GameInfo::a1WhiteRockMoved = true;
+				else if (sourcePiece->getPosition() == Coordinate{ 0,7 })
+					GameInfo::a8WhiteRockMoved = true;
+			}
+			else
+			{
+				if (sourcePiece->getPosition() == Coordinate{ 7,0 })
+					GameInfo::h1BlackRockMoved = true;
+				else if (sourcePiece->getPosition() == Coordinate{ 7,7 })
+					GameInfo::h8BlackRockMoved = true;
+			}
+		}
+		GameInfo::atelastMove = destPiece != nullptr;
+	}
+
 	if (shouldCoronate(move))
 	{
 		(*this)[move.destination] = sourcePiece->GetPiece(move.coronationRequest);
 		delete sourcePiece;
 		sourcePiece = nullptr;
 	}
-
-	if (!realMove)
-	{
-		return;
-	}
-
-	// Set global game info variables
-	if (sourcePiece->getType() == PieceType::KING)
-	{
-		kings_locations[sourcePiece->getColor()] = sourcePiece->getPosition();
-		if (sourcePiece->getColor() == WHITE)
-		{
-			GameInfo::whiteKingMoved = true;
-		}
-		else
-		{
-			GameInfo::blackKingMoved = true;
-		}
-	}
-	if (sourcePiece->getType() == PieceType::ROCK)
-	{
-		if (sourcePiece->getColor() == WHITE)
-		{
-			if (sourcePiece->getPosition() == Coordinate{ 0,0 })
-				GameInfo::a1WhiteRockMoved = true;
-			else if (sourcePiece->getPosition() == Coordinate{ 0,7 })
-				GameInfo::a8WhiteRockMoved = true;
-		}
-		else
-		{
-			if (sourcePiece->getPosition() == Coordinate{ 7,0 })
-				GameInfo::h1BlackRockMoved = true;
-			else if (sourcePiece->getPosition() == Coordinate{ 7,7 })
-				GameInfo::h8BlackRockMoved = true;
-		}
-	}
-	GameInfo::atelastMove = destPiece != nullptr;
 }
 
 bool Board::IsCheck(const Color color) const
