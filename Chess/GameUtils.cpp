@@ -45,6 +45,7 @@ bool IsQueenSideCastling(const std::wstring& move)
 
 singleMove GameUtils::stringToMove(std::wstring move)
 {
+	move = removeX(move);
 	// if the input string isn't a move, the function returns an empty move
 	
 	// define return var
@@ -128,7 +129,6 @@ singleMove GameUtils::stringToMove(std::wstring move)
 		}
 
 		move = removeUnnececeryEnding(move); // use to alarm player that took or gave check without knowing?
-		move = removeX(move);
 
 		// handle player telling us what origin piece is moving
 		if (move.length() > 2)
