@@ -108,7 +108,6 @@ ErrorCode King::IsValidPieceMove(const singleMove move, const Board& board) cons
 		if ((GameInfo::WhiteToPlay && GameInfo::whiteKingMoved) || (!GameInfo::WhiteToPlay && GameInfo::blackKingMoved))
 		{
 			return ErrorCode::KingAlreadyMoved;
-			// TODO: make sure king move is changing the GameInfo::blackKingMoved value (same with the rocks)
 		}
 
 		// relevant Rock hasn't moved (white)

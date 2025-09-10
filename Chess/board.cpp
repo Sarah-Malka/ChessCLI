@@ -158,56 +158,54 @@ void Board::Move(const Coordinate source, const singleMove move, bool realMove) 
 	board[move.destination.row][move.destination.collumn] = sourcePiece;
 	sourcePiece->Move(move.destination);
 
+	if (realMove)
+	{
+		// Set global game info variables
+		if (sourcePiece->getType() == PieceType::KING)
+		{
+			kings_locations[sourcePiece->getColor()] = sourcePiece->getPosition();
+			if (sourcePiece->getColor() == WHITE)
+			{
+				GameInfo::whiteKingMoved = true;
+			}
+			else
+			{
+				GameInfo::blackKingMoved = true;
+			}
+		}
+		if (sourcePiece->getType() == PieceType::ROCK)
+		{
+			if (sourcePiece->getColor() == WHITE)
+			{
+				if (sourcePiece->getPosition() == Coordinate{ 0,0 })
+					GameInfo::a1WhiteRockMoved = true;
+				else if (sourcePiece->getPosition() == Coordinate{ 0,7 })
+					GameInfo::a8WhiteRockMoved = true;
+			}
+			else
+			{
+				if (sourcePiece->getPosition() == Coordinate{ 7,0 })
+					GameInfo::h1BlackRockMoved = true;
+				else if (sourcePiece->getPosition() == Coordinate{ 7,7 })
+					GameInfo::h8BlackRockMoved = true;
+			}
+		}
+		GameInfo::atelastMove = destPiece != nullptr;
+		if (GameInfo::doubleMoveWasAttemptedThisTurn)
+		{
+			GameInfo::pawnSkippedThisSquareLastTurn = { sourcePiece->getColor() == Color::WHITE ? (uint8_t)2 : (uint8_t)5, sourcePiece->getPosition().collumn };
+		}
+		else
+		{
+			GameInfo::pawnSkippedThisSquareLastTurn = { GameInfo::outOfBoardRange, GameInfo::outOfBoardRange };
+		}
+	}
+
 	if (shouldCoronate(move))
 	{
 		(*this)[move.destination] = sourcePiece->GetPiece(move.coronationRequest);
 		delete sourcePiece;
 		sourcePiece = (*this)[move.destination];
-	}
-
-	if (!realMove)
-	{
-		return;
-	}
-
-	// Set global game info variables
-	if (sourcePiece->getType() == PieceType::KING)
-	{
-		kings_locations[sourcePiece->getColor()] = sourcePiece->getPosition();
-		if (sourcePiece->getColor() == WHITE)
-		{
-			GameInfo::whiteKingMoved = true;
-		}
-		else
-		{
-			GameInfo::blackKingMoved = true;
-		}
-	}
-	if (sourcePiece->getType() == PieceType::ROCK)
-	{
-		if (sourcePiece->getColor() == WHITE)
-		{
-			if (sourcePiece->getPosition() == Coordinate{ 0,0 })
-				GameInfo::a1WhiteRockMoved = true;
-			else if (sourcePiece->getPosition() == Coordinate{ 0,7 })
-				GameInfo::a8WhiteRockMoved = true;
-		}
-		else
-		{
-			if (sourcePiece->getPosition() == Coordinate{ 7,0 })
-				GameInfo::h1BlackRockMoved = true;
-			else if (sourcePiece->getPosition() == Coordinate{ 7,7 })
-				GameInfo::h8BlackRockMoved = true;
-		}
-	}
-	GameInfo::atelastMove = destPiece != nullptr;
-	if (GameInfo::doubleMoveWasAttemptedThisTurn)
-	{
-		GameInfo::pawnSkippedThisSquareLastTurn = { sourcePiece->getColor() == Color::WHITE ? (uint8_t)2 : (uint8_t)5, sourcePiece->getPosition().collumn };
-	}
-	else
-	{
-		GameInfo::pawnSkippedThisSquareLastTurn = { GameInfo::outOfBoardRange, GameInfo::outOfBoardRange };
 	}
 }
 
