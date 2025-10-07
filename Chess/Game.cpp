@@ -86,7 +86,16 @@ void Game::Start()
 		{
 			board.PrintBoard();
 		}
-		
+
+		// before move - check if game ended with mate/stalemate/treefold repitition/50-move rule/draw offer/surrender
+		// 
+		//std::vector<Piece*> possiblePieces = GetPossiblePiecesToMove(all possible moves);
+		//if (possiblePieces.empty())
+		//{
+		//	throw Exception(relevant_end_game, L"Game ended");
+		// end run
+		//}
+
 		std::wcout << L"Enter " << (GameInfo::WhiteToPlay ? L"white's " : L"black's ") << L"move: " << std::endl;
 		std::wstring str_move = L"";
 		std::wcin >> str_move;
