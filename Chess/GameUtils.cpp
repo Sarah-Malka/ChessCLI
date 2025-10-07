@@ -144,8 +144,23 @@ singleMove GameUtils::stringToMove(std::wstring move)
 			}
 		}
 
-		move = removeUnnececeryEnding(move); // use to alarm player that took or gave check without knowing?
-		move = removeX(move);
+		// destination
+		if (!move.empty())
+		{
+			size_t len = move.length();
+			if (move[len - 1] >= L'1' && move[len - 1] <= L'8')
+			{
+				ret.destination.row = move[len - 1] - L'1';
+				move.pop_back();
+			}
+			len = move.length();
+			if (!move.empty() && move[len - 1] >= L'a' && move[len - 1] <= L'h')
+			{
+				ret.destination.collumn = move[len - 1] - L'a';
+				move.pop_back();
+			}
+		}
+
 
 		// handle player telling us what origin piece is moving
 		if (move.length() > 2)
