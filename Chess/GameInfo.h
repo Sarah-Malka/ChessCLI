@@ -16,8 +16,9 @@ public:
 	static bool h1BlackRockMoved;
 	static bool h8BlackRockMoved;
 
+	static constexpr uint8_t outOfBoardRange = 10;
 	static Coordinate pawnSkippedThisSquareLastTurn;
-
+	static bool doubleMoveWasAttemptedThisTurn;
 
 };
 

@@ -47,7 +47,7 @@ bool IsQueenSideCastling(const std::wstring& move)
 
 singleMove GameUtils::stringToMove(std::wstring move)
 {
-	// if the input string isn't a move, the function returns a defalte non-legal move
+	// if the input string isn't a move, the function returns an empty move
 	
 	// define return var
 	singleMove ret = getInvalidMove();
@@ -144,22 +144,8 @@ singleMove GameUtils::stringToMove(std::wstring move)
 			}
 		}
 
-		// destination
-		if (!move.empty())
-		{
-			size_t len = move.length();
-			if (move[len - 1] >= L'1' && move[len - 1] <= L'8')
-			{
-				ret.destination.row = move[len - 1] - L'1';
-				move.pop_back();
-			}
-			len = move.length();
-			if (!move.empty() && move[len - 1] >= L'a' && move[len - 1] <= L'h')
-			{
-				ret.destination.collumn = move[len - 1] - L'a';
-				move.pop_back();
-			}
-		}
+		move = removeUnnececeryEnding(move); // use to alarm player that took or gave check without knowing?
+		move = removeX(move);
 
 		// handle player telling us what origin piece is moving
 		if (move.length() > 2)

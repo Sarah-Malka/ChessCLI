@@ -11,5 +11,5 @@ bool GameInfo::blackKingMoved = false;
 bool GameInfo::h1BlackRockMoved = false;
 bool GameInfo::h8BlackRockMoved = false;
 
-constexpr uint8_t outOfBoardRange = 10;
 Coordinate GameInfo::pawnSkippedThisSquareLastTurn = {outOfBoardRange, outOfBoardRange};
+bool GameInfo::doubleMoveWasAttemptedThisTurn = false;

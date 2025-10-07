@@ -191,6 +191,14 @@ void Board::Move(const Coordinate source, const singleMove move, bool realMove) 
 			}
 		}
 		GameInfo::atelastMove = destPiece != nullptr;
+		if (GameInfo::doubleMoveWasAttemptedThisTurn)
+		{
+			GameInfo::pawnSkippedThisSquareLastTurn = { sourcePiece->getColor() == Color::WHITE ? (uint8_t)2 : (uint8_t)5, sourcePiece->getPosition().collumn };
+		}
+		else
+		{
+			GameInfo::pawnSkippedThisSquareLastTurn = { GameInfo::outOfBoardRange, GameInfo::outOfBoardRange };
+		}
 	}
 
 	if (shouldCoronate(move))

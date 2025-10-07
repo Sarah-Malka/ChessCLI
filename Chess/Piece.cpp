@@ -208,7 +208,12 @@ ErrorCode Pawn::IsValidPieceMove(const singleMove move, const Board& board) cons
 	}
 	if (abs(position.row - move.destination.row) == 2) // first time the pawn has moved?
 	{
-		return IsValidDoubleStep(move, board);
+		ErrorCode result = IsValidDoubleStep(move, board);
+		if (result == ErrorCode::Success)
+		{
+			GameInfo::doubleMoveWasAttemptedThisTurn = true;
+		}
+		return result;
 	}
 	if (abs(position.row - move.destination.row) != 1)
 	{

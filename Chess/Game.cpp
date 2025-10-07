@@ -104,7 +104,10 @@ void Game::Start()
 		try
 		{
 			singleMove move = GameUtils::stringToMove(str_move); // get move Coordinates
-			last_relevant_move_error = ErrorCode::Success;
+
+			last_relevant_move_error = ErrorCode::Success;	// initializations of start of turn
+			GameInfo::doubleMoveWasAttemptedThisTurn = false;
+			
 			std::vector<Piece*> possiblePieces = GetPossiblePiecesToMove(move); // what piece might move there?
 			if (possiblePieces.empty())
 			{
