@@ -4,7 +4,8 @@
 #include <Windows.h>
 #include "GameInfo.h"
 
-const size_t NonValideIndex = 10;
+//const size_t NonValideIndex = 10;
+size_t GameUtils::NonValideIndex = 10;
 
 bool lastMoveWasCapture = false;
 PieceType pieceForCoronation = PieceType::PAWN;
@@ -59,7 +60,6 @@ singleMove GameUtils::stringToMove(std::wstring move)
 
 		if (move.empty())
 			{
-				std::cout << "empty move!" << std::endl;
 				return ret; //this is a way of expressing an error. give player another turn instead.
 			}
 		if (IsKingSideCastling(move) || IsQueenSideCastling(move))

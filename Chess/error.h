@@ -35,6 +35,8 @@ enum class ErrorCode //Order Is important
 	NoPieceFoundAtOriginPosition,
 	MoreThanOneCompatiblePiece,
 
+	FailedParsingMove,
+
 	Success
 };
 
@@ -63,5 +65,6 @@ static std::map<ErrorCode, std::wstring> errorCodeToMessage = {
 	{ErrorCode::MoreThanOneCompatiblePiece, L"MoreThanOneCompatiblePiece"},
 	{ErrorCode::YouAreInCheck, L"YouAreInCheck"},
 	{ErrorCode::NoPieceFoundAtOriginPosition, L"NoPieceFoundAtOriginPosition"},
+	{ErrorCode::FailedParsingMove, L"Failed parsing move"},
 };
 

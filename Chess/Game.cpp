@@ -104,7 +104,10 @@ void Game::Start()
 		try
 		{
 			singleMove move = GameUtils::stringToMove(str_move); // get move Coordinates
-
+			if (move.destination.row == GameUtils::NonValideIndex || move.destination.collumn == GameUtils::NonValideIndex)
+			{
+				throw Exception(ErrorCode::FailedParsingMove, L"Failed parsing move");
+			}
 			last_relevant_move_error = ErrorCode::Success;	// initializations of start of turn
 			GameInfo::doubleMoveWasAttemptedThisTurn = false;
 			
