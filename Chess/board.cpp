@@ -158,6 +158,14 @@ void Board::Move(const Coordinate source, const singleMove move, bool realMove) 
 	board[move.destination.row][move.destination.collumn] = sourcePiece;
 	sourcePiece->Move(move.destination);
 
+	// if en-passant
+	if (sourcePiece->getType() == PieceType::PAWN && sourcePiece->getPosition() == GameInfo::pawnSkippedThisSquareLastTurn)
+	{
+		Coordinate capturedPawnCoordinate = { sourcePiece->getColor() ==  Color::BLACK ? (uint8_t)3 : (uint8_t)4, sourcePiece->getPosition().collumn };
+		delete board[capturedPawnCoordinate.row][capturedPawnCoordinate.collumn];
+		board[capturedPawnCoordinate.row][capturedPawnCoordinate.collumn] = nullptr;
+	}
+
 	if (realMove)
 	{
 		// Set global game info variables

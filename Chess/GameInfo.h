@@ -19,6 +19,5 @@ public:
 	static constexpr uint8_t outOfBoardRange = 10;
 	static Coordinate pawnSkippedThisSquareLastTurn;
 	static bool doubleMoveWasAttemptedThisTurn;
-
 };
 

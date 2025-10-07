@@ -171,14 +171,17 @@ ErrorCode Pawn::IsValidDoubleStep(const singleMove move, const Board& board) con
 	}
 	return ErrorCode::Success;
 }
+
 bool Pawn::DidNotMove() const
 {
 	return (color == Color::WHITE && position.row == 1) || (color == Color::BLACK && position.row == 6);
 }
+
 bool Pawn::IsMovingForward(const singleMove move) const
 {
 	return (color == Color::WHITE && move.destination.row > position.row) || (color == Color::BLACK && move.destination.row < position.row);
 }
+
 ErrorCode Pawn::IsValidCapture(const singleMove move, const Board& board) const
 {
 	if (this->position.collumn + 1 != move.destination.collumn && this->position.collumn - 1 != move.destination.collumn) //move exactly one to the side
@@ -196,6 +199,7 @@ ErrorCode Pawn::IsValidCapture(const singleMove move, const Board& board) const
 	}
 	return ErrorCode::Success;
 }
+
 ErrorCode Pawn::IsValidPieceMove(const singleMove move, const Board& board) const // unfinished
 {
 	if (!IsMovingForward(move))
@@ -206,7 +210,7 @@ ErrorCode Pawn::IsValidPieceMove(const singleMove move, const Board& board) cons
 	{
 		return IsValidCapture(move, board);
 	}
-	if (abs(position.row - move.destination.row) == 2) // first time the pawn has moved?
+	if (abs(position.row - move.destination.row) == 2) // is first time the pawn has moved?
 	{
 		ErrorCode result = IsValidDoubleStep(move, board);
 		if (result == ErrorCode::Success)
@@ -221,33 +225,12 @@ ErrorCode Pawn::IsValidPieceMove(const singleMove move, const Board& board) cons
 	}
 	if (board[move.destination] != nullptr)
 	{
-		// something something queenning something?
 		return ErrorCode::SquareIsOccupied;
 	}
 	return ErrorCode::Success;
-	//
-	//else if (this->color == Color::BLACK)
-	//{
-	//	if (this->position.collumn == move.destination.collumn) // not a capture
-	//	{
-	//		if (this->position.row - 2 == move.destination.row) // first time the pawn has moved?
-	//		{
-	//			if (this->position.row == 6 && board[this->position.row - 1][this->position.collumn] == nullptr && board[this->position.row - 2][this->position.collumn] == nullptr)// note that the row and collumn are in this order
-	//			{
-	//				return ErrorCode::Success;
-	//			}
-	//			return false;
-	//		}
-	//		else if (this->position.row - 1 == move.destination.row && board[this->position.row - 1][this->position.collumn] == nullptr)
-	//		{
-	//			// something something queenning something?
-	//			return ErrorCode::Success;
-	//		}
-	//		return false;
-	//	}
-	//	return IsValidCapture(move, board);
-	//}
+
 }
+
 ErrorCode Knight::IsValidPieceMove(const singleMove move, const Board& board) const
 {
 	if (((abs(move.destination.row - this->position.row) == 2) && (abs(move.destination.collumn - this->position.collumn) == 1)) xor ((abs(move.destination.row - this->position.row) == 1) && (abs(move.destination.collumn - this->position.collumn) == 2)))
@@ -256,6 +239,7 @@ ErrorCode Knight::IsValidPieceMove(const singleMove move, const Board& board) co
 	}
 	return ErrorCode::InvalidKnightMove;
 }
+
 ErrorCode Bishop::IsValidPieceMove(const singleMove move, const Board& board) const
 {
 	if (!((this->position.row - this->position.collumn) == (move.destination.row - move.destination.collumn)) xor ((this->position.row + this->position.collumn) == (move.destination.row + move.destination.collumn)))
@@ -292,6 +276,7 @@ ErrorCode Bishop::IsValidPieceMove(const singleMove move, const Board& board) co
 
 	return ErrorCode::Success;
 }
+
 ErrorCode Rock::IsValidPieceMove(const singleMove move, const Board& board) const
 {
 	if (move.destination.row != position.row && move.destination.collumn != position.collumn)
@@ -325,6 +310,7 @@ ErrorCode Rock::IsValidPieceMove(const singleMove move, const Board& board) cons
 
 	return ErrorCode::Success;
 }
+
 ErrorCode Queen::IsValidPieceMove(const singleMove move, const Board& board) const
 {
 	Rock rock(color, position);

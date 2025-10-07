@@ -178,19 +178,11 @@ singleMove GameUtils::stringToMove(std::wstring move)
 		}
 
 
-		// destination
-		//if (!move.empty()) // this will be non legit
-		//{
-		//	std::cout << "No valid destination! " << std::endl;
-		//	return ret;
-		//}
 	}
 	catch (...)
 	{
 		return getInvalidMove();
 	}
-
-	// special moves (castling, en-passant)
 
 	return ret;
 }
