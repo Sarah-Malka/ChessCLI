@@ -59,9 +59,9 @@ singleMove GameUtils::stringToMove(std::wstring move)
 		move = removeX(move);
 
 		if (move.empty())
-			{
-				return ret; //this is a way of expressing an error. give player another turn instead.
-			}
+		{
+			return ret; //this is a way of expressing an error. give player another turn instead.
+		}
 		if (IsKingSideCastling(move) || IsQueenSideCastling(move))
 		{
 			ret.originalPiece = PieceType::KING;
