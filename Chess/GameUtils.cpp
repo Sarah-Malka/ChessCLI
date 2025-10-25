@@ -189,13 +189,15 @@ singleMove GameUtils::stringToMove(std::wstring move)
 
 std::wstring GameUtils::removeUnnececeryEnding(std::wstring move)
 {
-	while (!move.empty() && (move.back() > L'8' or move.back() < L'1') &&
+	while (!move.empty() && (move.back() > L'8' or move.back() < L'0') &&
 		move.back() != L'R' &&
 		move.back() != L'r' &&
 		move.back() != L'B' &&
 		move.back() != L'b' &&
 		move.back() != L'N' &&
-		move.back() != L'n')
+		move.back() != L'n' &&
+		move.back() != L'O' &&
+		move.back() != L'o')
 	{
 		move.pop_back();
 	}

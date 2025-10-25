@@ -165,13 +165,16 @@ void Board::Move(const Coordinate source, const singleMove move, bool realMove) 
 		delete board[capturedPawnCoordinate.row][capturedPawnCoordinate.collumn];
 		board[capturedPawnCoordinate.row][capturedPawnCoordinate.collumn] = nullptr;
 	}
+	if (sourcePiece->getType() == PieceType::KING)
+	{
+		kings_locations[sourcePiece->getColor()] = sourcePiece->getPosition();
+	}
 
 	if (realMove)
 	{
 		// Set global game info variables
 		if (sourcePiece->getType() == PieceType::KING)
 		{
-			kings_locations[sourcePiece->getColor()] = sourcePiece->getPosition();
 			if (sourcePiece->getColor() == WHITE)
 			{
 				GameInfo::whiteKingMoved = true;
