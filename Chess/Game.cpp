@@ -78,6 +78,67 @@ std::vector<Piece*> Game::GetPossiblePiecesToMove(const singleMove move)
 	return possiblePieces;
 }
 
+bool Game::GameHasEnded()
+{
+	// before move - check if game ended with mate/stalemate/treefold repitition/50-move rule/draw offer/surrender/insufficient material
+	Color color = GameInfo::WhiteToPlay ? Color::WHITE : Color::BLACK;
+	if (LegalMoveExists(color))
+	{
+		return false;
+	}
+		//if (!LegalMoveExists(color))
+		//if (king isCheck)
+		//	print("Game ended, white/black won");
+		//else
+		// print("Game ended, drak by stalmate");
+	
+	return true;
+}
+
+bool Game::LegalMoveExists(Color color)
+{
+	for (uint8_t row = 0; row < 8; row++)
+	{
+		for (uint8_t col = 0; col < 8; col++)
+		{
+			Piece* piece = board[row][col];
+			if (piece == nullptr)
+			{
+				continue;
+			}
+			if (piece->getColor() != color)
+			{
+				continue;
+			}
+			if (PieceHasLegalMoves(piece))
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+bool Game::PieceHasLegalMoves(Piece* piece)
+{
+	for (uint8_t row = 0; row < 8; row++)
+	{
+		for (uint8_t col = 0; col < 8; col++)
+		{
+			singleMove move;
+			move.destination.row = row;
+			move.destination.collumn = col;
+			move.origin = piece->getPosition();
+			move.originalPiece = piece->getType();
+			if (piece->IsValidMove(move, board) == ErrorCode::Success && !board.WillCauseCheck(piece->getColor(), move.origin, move))
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 void Game::Start()
 {
 	while (true)
@@ -86,15 +147,11 @@ void Game::Start()
 		{
 			board.PrintBoard();
 		}
-
-		// before move - check if game ended with mate/stalemate/treefold repitition/50-move rule/draw offer/surrender
-		// 
-		//std::vector<Piece*> possiblePieces = GetPossiblePiecesToMove(all possible moves);
-		//if (possiblePieces.empty())
-		//{
-		//	throw Exception(relevant_end_game, L"Game ended");
-		// end run
-		//}
+		
+		if (GameHasEnded())
+		{
+			break;
+		}
 
 		std::wcout << L"Enter " << (GameInfo::WhiteToPlay ? L"white's " : L"black's ") << L"move: " << std::endl;
 		std::wstring str_move = L"";
