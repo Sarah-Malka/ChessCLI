@@ -13,3 +13,5 @@ bool GameInfo::h8BlackRockMoved = false;
 
 Coordinate GameInfo::pawnSkippedThisSquareLastTurn = {outOfBoardRange, outOfBoardRange};
 bool GameInfo::doubleMoveWasAttemptedThisTurn = false;
+
+size_t GameInfo::numberOfMovesFor50MoveRule = 0;

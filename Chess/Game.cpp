@@ -81,16 +81,15 @@ std::vector<Piece*> Game::GetPossiblePiecesToMove(const singleMove move)
 bool Game::GameHasEnded()
 {
 	// before move - check if game ended with mate/stalemate/treefold repitition/50-move rule/draw offer/surrender/insufficient material
+	if (GameInfo::numberOfMovesFor50MoveRule > 100)
+	{
+		return true;
+	}
 	Color color = GameInfo::WhiteToPlay ? Color::WHITE : Color::BLACK;
 	if (LegalMoveExists(color))
 	{
 		return false;
 	}
-		//if (!LegalMoveExists(color))
-		//if (king isCheck)
-		//	print("Game ended, white/black won");
-		//else
-		// print("Game ended, drak by stalmate");
 	
 	return true;
 }
@@ -148,8 +147,14 @@ void Game::Start()
 			board.PrintBoard();
 		}
 		
+		if (GameInfo::atelastMove)
+		{
+			GameInfo::numberOfMovesFor50MoveRule = 0;
+		}
+
 		if (GameHasEnded())
 		{
+			// announce winner if king is in check and draw otherwise or if 50-move
 			break;
 		}
 
@@ -183,6 +188,7 @@ void Game::Start()
 			Sleep(130);
 			invalid_input = false;
 			GameInfo::WhiteToPlay = !GameInfo::WhiteToPlay;
+			GameInfo::numberOfMovesFor50MoveRule += 1;
 		}
 		catch (Exception ex)
 		{

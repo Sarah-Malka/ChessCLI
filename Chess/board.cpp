@@ -201,6 +201,10 @@ void Board::Move(const Coordinate source, const singleMove move, bool realMove) 
 					GameInfo::h8BlackRockMoved = true;
 			}
 		}
+		if (sourcePiece->getType() == PieceType::PAWN)
+		{
+			GameInfo::numberOfMovesFor50MoveRule = 0;
+		}
 		GameInfo::atelastMove = destPiece != nullptr;
 		if (GameInfo::doubleMoveWasAttemptedThisTurn)
 		{
