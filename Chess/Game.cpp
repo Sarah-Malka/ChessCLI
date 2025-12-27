@@ -110,9 +110,20 @@ void Game::Start()
 
 		if (GameHasEnded())
 		{
-			// announce winner if king is in check and draw otherwise or if 50-move
-		//	if()
-			//std::printf("draw!");
+			Color color = WHITE;
+			if (GameInfo::WhiteToPlay == false)
+			{
+				color = BLACK;
+			}
+
+			if (board.isCheckmate(color))
+			{
+				std::cout << "Checkmate, " << (GameInfo::WhiteToPlay ? "black " : "white ") << "wins!\n";
+			}
+			else
+			{
+				std::cout << "Draw!\n";
+			}
 			break;
 		}
 

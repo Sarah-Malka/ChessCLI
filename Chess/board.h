@@ -19,7 +19,7 @@ public:
 	static array2D GetToInitialState();
 
 	bool isCheckmate(Color color);
-	static bool isStalemate();
+	bool isStalemate(Color color);
 
 public:
 	Board();

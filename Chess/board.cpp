@@ -275,6 +275,7 @@ bool Board::IsCheck(const Color color) const
 
 bool Board::IsCheck(const Color color, Coordinate king_location) const
 {
+	// function answers: is the given color in check?
 	singleMove captureKing;
 	captureKing.destination = king_location;
 
@@ -309,15 +310,19 @@ bool Board::WillCauseCheck(const Color color, const Coordinate source, const sin
 
 bool Board::isCheckmate(Color color)
 {
-	if (IsCheck(color) && LegalMoveExists(color))
+	if (IsCheck(color) && !LegalMoveExists(color))
 	{
-
+		return true;
 	}
 	return false;
 }
 
-bool Board::isStalemate()
+bool Board::isStalemate(Color color)
 {
+	if (!IsCheck(color) && !LegalMoveExists(color))
+	{
+		return true;
+	}
 	return false;
 }
 
