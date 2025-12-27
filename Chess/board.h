@@ -18,7 +18,7 @@ public:
 	array2D board;
 	static array2D GetToInitialState();
 
-	static bool isCheckmate();
+	bool isCheckmate(Color color);
 	static bool isStalemate();
 
 public:
@@ -34,4 +34,6 @@ public:
 	bool IsCheck(const Color color) const;
 	bool IsCheck(const Color color, Coordinate sqr) const;
 	bool WillCauseCheck(const Color color, const Coordinate source, const singleMove move) const;
+	bool LegalMoveExists(Color color);
+	bool PieceHasLegalMoves(Piece* piece);
 };

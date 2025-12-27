@@ -86,56 +86,12 @@ bool Game::GameHasEnded()
 		return true;
 	}
 	Color color = GameInfo::WhiteToPlay ? Color::WHITE : Color::BLACK;
-	if (LegalMoveExists(color))
+	if (board.LegalMoveExists(color))
 	{
 		return false;
 	}
 	
 	return true;
-}
-
-bool Game::LegalMoveExists(Color color)
-{
-	for (uint8_t row = 0; row < 8; row++)
-	{
-		for (uint8_t col = 0; col < 8; col++)
-		{
-			Piece* piece = board[row][col];
-			if (piece == nullptr)
-			{
-				continue;
-			}
-			if (piece->getColor() != color)
-			{
-				continue;
-			}
-			if (PieceHasLegalMoves(piece))
-			{
-				return true;
-			}
-		}
-	}
-	return false;
-}
-
-bool Game::PieceHasLegalMoves(Piece* piece)
-{
-	for (uint8_t row = 0; row < 8; row++)
-	{
-		for (uint8_t col = 0; col < 8; col++)
-		{
-			singleMove move;
-			move.destination.row = row;
-			move.destination.collumn = col;
-			move.origin = piece->getPosition();
-			move.originalPiece = piece->getType();
-			if (piece->IsValidMove(move, board) == ErrorCode::Success && !board.WillCauseCheck(piece->getColor(), move.origin, move))
-			{
-				return true;
-			}
-		}
-	}
-	return false;
 }
 
 void Game::Start()
@@ -155,6 +111,8 @@ void Game::Start()
 		if (GameHasEnded())
 		{
 			// announce winner if king is in check and draw otherwise or if 50-move
+		//	if()
+			//std::printf("draw!");
 			break;
 		}
 

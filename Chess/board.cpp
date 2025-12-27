@@ -138,6 +138,50 @@ Coordinate GetCastlationRockTargetPosition(singleMove move)
 	return rockPosition;
 }
 
+bool Board::PieceHasLegalMoves(Piece* piece)
+{
+	for (uint8_t row = 0; row < 8; row++)
+	{
+		for (uint8_t col = 0; col < 8; col++)
+		{
+			singleMove move;
+			move.destination.row = row;
+			move.destination.collumn = col;
+			move.origin = piece->getPosition();
+			move.originalPiece = piece->getType();
+			if (piece->IsValidMove(move, *this) == ErrorCode::Success && !WillCauseCheck(piece->getColor(), move.origin, move))
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+bool Board::LegalMoveExists(Color color)
+{
+	for (uint8_t row = 0; row < 8; row++)
+	{
+		for (uint8_t col = 0; col < 8; col++)
+		{
+			Piece* piece = board[row][col];
+			if (piece == nullptr)
+			{
+				continue;
+			}
+			if (piece->getColor() != color)
+			{
+				continue;
+			}
+			if (PieceHasLegalMoves(piece))
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 void Board::Move(const Coordinate source, const singleMove move, bool realMove) // this is the actual moving
 {
 	Piece* sourcePiece = board[source.row][source.collumn];
@@ -263,8 +307,12 @@ bool Board::WillCauseCheck(const Color color, const Coordinate source, const sin
 	return copy_board.IsCheck(color);
 }
 
-bool Board::isCheckmate()
+bool Board::isCheckmate(Color color)
 {
+	if (IsCheck(color) && LegalMoveExists(color))
+	{
+
+	}
 	return false;
 }
 
