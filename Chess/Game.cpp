@@ -118,11 +118,11 @@ void Game::Start()
 
 			if (board.isCheckmate(color))
 			{
-				std::cout << "Checkmate, " << (GameInfo::WhiteToPlay ? "black " : "white ") << "wins!\n";
+				std::wcout << (GameInfo::WhiteToPlay ? L"0-1\n" : L"1-0\n") << L"Checkmate, " << (GameInfo::WhiteToPlay ? L"black " : L"white ") << L"wins!\n";
 			}
 			else
 			{
-				std::cout << "Draw!\n";
+				std::wcout << L'\u00BD' << L"-" << L'\u00BD' << L"\nDraw!\n";
 			}
 			break;
 		}
