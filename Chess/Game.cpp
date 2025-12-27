@@ -4,6 +4,87 @@
 #include "Exception.h"
 #include <Windows.h>
 
+void Game::Start()
+{
+	while (true)
+	{
+		if (!invalid_input)
+		{
+			board.PrintBoard();
+		}
+
+		if (GameInfo::atelastMove)
+		{
+			GameInfo::numberOfMovesFor50MoveRule = 0;
+		}
+
+		if (GameHasEnded())
+		{
+			Color color = WHITE;
+			if (GameInfo::WhiteToPlay == false)
+			{
+				color = BLACK;
+			}
+
+			if (board.isCheckmate(color))
+			{
+				std::wcout << (GameInfo::WhiteToPlay ? L"0-1\n" : L"1-0\n") << L"Checkmate, " << (GameInfo::WhiteToPlay ? L"black " : L"white ") << L"wins!\n";
+			}
+			else
+			{
+				std::wcout << L'\u00BD' << L"-" << L'\u00BD' << L"\nDraw!\n";
+			}
+			break;
+		}
+
+		std::wcout << L"Enter " << (GameInfo::WhiteToPlay ? L"white's " : L"black's ") << L"move: " << std::endl;
+		std::wstring str_move = L"";
+		std::wcin >> str_move;
+		if (std::wcin.eof()) break; // quit if Ctrl+Z
+
+		try
+		{
+			singleMove move = GameUtils::stringToMove(str_move); // get move Coordinates
+			if (move.destination.row == GameUtils::NonValideIndex || move.destination.collumn == GameUtils::NonValideIndex)
+			{
+				throw Exception(ErrorCode::FailedParsingMove, L"Failed parsing move");
+			}
+			last_relevant_move_error = ErrorCode::Success;	// initializations of start of turn
+			GameInfo::doubleMoveWasAttemptedThisTurn = false;
+
+			std::vector<Piece*> possiblePieces = GetPossiblePiecesToMove(move); // what piece might move there?
+			if (possiblePieces.empty())
+			{
+				throw Exception(last_relevant_move_error, L"There is no compatible piece");
+			}
+			if (possiblePieces.size() > 1)
+			{
+				throw Exception(ErrorCode::MoreThanOneCompatiblePiece, L"Ambigious command");
+			}
+			Piece* pieceToMove = possiblePieces[0];
+			board.Move(pieceToMove->getPosition(), move, true); // the actual moving
+			GameUtils::GameSound(GameInfo::atelastMove);
+			Sleep(130);
+			invalid_input = false;
+			GameInfo::WhiteToPlay = !GameInfo::WhiteToPlay;
+			GameInfo::numberOfMovesFor50MoveRule += 1;
+
+			if (GameInfo::atelastMove || move.originalPiece == PAWN)
+			{
+				board.ClearHashMap();
+			}
+			board.UpdateHashMap();
+
+		}
+		catch (Exception ex)
+		{
+			invalid_input = true;
+			std::wcout << ex.Message() << L". ErrorCode " << (int)ex.GetError() << L": " << errorCodeToMessage.at(ex.GetError()) << std::endl;
+			continue;
+		}
+	}
+}
+
 std::vector<Piece*> Game::GetPossiblePiecesToMove(const singleMove move)
 {
 	Color colorToPlay = GameInfo::WhiteToPlay ? Color::WHITE : Color::BLACK;
@@ -85,6 +166,12 @@ bool Game::GameHasEnded()
 	{
 		return true;
 	}
+
+	if (board.ThreeFoldRepetition())
+	{
+		return true;
+	}
+
 	Color color = GameInfo::WhiteToPlay ? Color::WHITE : Color::BLACK;
 	if (board.LegalMoveExists(color))
 	{
@@ -92,78 +179,4 @@ bool Game::GameHasEnded()
 	}
 	
 	return true;
-}
-
-void Game::Start()
-{
-	while (true)
-	{
-		if (!invalid_input)
-		{
-			board.PrintBoard();
-		}
-		
-		if (GameInfo::atelastMove)
-		{
-			GameInfo::numberOfMovesFor50MoveRule = 0;
-		}
-
-		if (GameHasEnded())
-		{
-			Color color = WHITE;
-			if (GameInfo::WhiteToPlay == false)
-			{
-				color = BLACK;
-			}
-
-			if (board.isCheckmate(color))
-			{
-				std::wcout << (GameInfo::WhiteToPlay ? L"0-1\n" : L"1-0\n") << L"Checkmate, " << (GameInfo::WhiteToPlay ? L"black " : L"white ") << L"wins!\n";
-			}
-			else
-			{
-				std::wcout << L'\u00BD' << L"-" << L'\u00BD' << L"\nDraw!\n";
-			}
-			break;
-		}
-
-		std::wcout << L"Enter " << (GameInfo::WhiteToPlay ? L"white's " : L"black's ") << L"move: " << std::endl;
-		std::wstring str_move = L"";
-		std::wcin >> str_move;
-		if (std::wcin.eof()) break; // quit if Ctrl+Z
-
-		try
-		{
-			singleMove move = GameUtils::stringToMove(str_move); // get move Coordinates
-			if (move.destination.row == GameUtils::NonValideIndex || move.destination.collumn == GameUtils::NonValideIndex)
-			{
-				throw Exception(ErrorCode::FailedParsingMove, L"Failed parsing move");
-			}
-			last_relevant_move_error = ErrorCode::Success;	// initializations of start of turn
-			GameInfo::doubleMoveWasAttemptedThisTurn = false;
-			
-			std::vector<Piece*> possiblePieces = GetPossiblePiecesToMove(move); // what piece might move there?
-			if (possiblePieces.empty())
-			{
-				throw Exception(last_relevant_move_error, L"There is no compatible piece");
-			}
-			if (possiblePieces.size() > 1)
-			{
-				throw Exception(ErrorCode::MoreThanOneCompatiblePiece, L"Ambigious command");
-			}
-			Piece* pieceToMove = possiblePieces[0];
-			board.Move(pieceToMove->getPosition(), move, true); // the actual moving
-			GameUtils::GameSound(GameInfo::atelastMove);
-			Sleep(130);
-			invalid_input = false;
-			GameInfo::WhiteToPlay = !GameInfo::WhiteToPlay;
-			GameInfo::numberOfMovesFor50MoveRule += 1;
-		}
-		catch (Exception ex)
-		{
-			invalid_input = true;
-			std::wcout << ex.Message() << L". ErrorCode " << (int)ex.GetError() << L": " << errorCodeToMessage.at(ex.GetError()) << std::endl;
-			continue;
-		}
-	}
 }

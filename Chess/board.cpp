@@ -5,6 +5,7 @@
 #include <conio.h>
 #include <Windows.h>
 #include <string>
+#include <map>
 
 Board::Board() :
 	kings_locations({ Coordinate{0,4}, Coordinate{7,4} })
@@ -325,6 +326,18 @@ bool Board::isStalemate(Color color)
 	}
 	return false;
 }
+
+bool Board::ThreeFoldRepetition()
+{
+	return false;
+}
+void Board::UpdateHashMap()
+{
+}
+void Board::ClearHashMap()
+{
+}
+
 
 Board::Board(const Board& other) // copy constructor
 	: kings_locations(other.kings_locations)

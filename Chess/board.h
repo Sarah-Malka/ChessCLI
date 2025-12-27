@@ -10,6 +10,7 @@ class Board
 {
 private:
 	std::vector<Coordinate> kings_locations;
+	std::map<std::wstring, std::uint8_t> threeFoldMap; //map to count the number of position repititions
 
 	Board(const Board& other);
 	bool shouldCoronate(singleMove move);
@@ -20,6 +21,9 @@ public:
 
 	bool isCheckmate(Color color);
 	bool isStalemate(Color color);
+	bool ThreeFoldRepetition();
+	void UpdateHashMap();
+	void ClearHashMap();
 
 public:
 	Board();
