@@ -47,7 +47,7 @@ void Game::Start()
 			singleMove move = GameUtils::stringToMove(str_move); // get move Coordinates
 			if (move.destination.row == GameUtils::NonValideIndex || move.destination.collumn == GameUtils::NonValideIndex)
 			{
-				throw Exception(ErrorCode::FailedParsingMove, L"Failed parsing move");
+				throw Exception(ErrorCode::FailedParsingMove);
 			}
 			last_relevant_move_error = ErrorCode::Success;	// initializations of start of turn
 			GameInfo::doubleMoveWasAttemptedThisTurn = false;
@@ -55,11 +55,11 @@ void Game::Start()
 			std::vector<Piece*> possiblePieces = GetPossiblePiecesToMove(move); // what piece might move there?
 			if (possiblePieces.empty())
 			{
-				throw Exception(last_relevant_move_error, L"There is no compatible piece");
+				throw Exception(last_relevant_move_error);
 			}
 			if (possiblePieces.size() > 1)
 			{
-				throw Exception(ErrorCode::MoreThanOneCompatiblePiece, L"Ambigious command");
+				throw Exception(ErrorCode::MoreThanOneCompatiblePiece);
 			}
 			Piece* pieceToMove = possiblePieces[0];
 			board.Move(pieceToMove->getPosition(), move, true); // the actual moving
@@ -79,7 +79,7 @@ void Game::Start()
 		catch (Exception ex)
 		{
 			invalid_input = true;
-			std::wcout << ex.Message() << L". ErrorCode " << (int)ex.GetError() << L": " << errorCodeToMessage.at(ex.GetError()) << std::endl;
+			std::wcout << L"ErrorCode " << (int)ex.GetError() << L": " << errorCodeToMessage.at(ex.GetError()) << std::endl;
 			continue;
 		}
 	}
