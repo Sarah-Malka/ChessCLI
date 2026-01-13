@@ -138,7 +138,7 @@ ErrorCode King::IsValidPieceMove(const singleMove move, const Board& board) cons
 		for (uint8_t i = std::min(position.collumn, move.destination.collumn); i <= std::max(position.collumn, move.destination.collumn); i++)
 		{
 			Coordinate coor = { GameInfo::WhiteToPlay ? 0 : 7, i };
-			if (board.IsCheck(colorToPlay, coor))
+			if (board.IsInCheck(colorToPlay, coor))
 			{
 				return ErrorCode::IllegalCheckExposureDuringCastlation;
 			}

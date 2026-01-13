@@ -102,7 +102,7 @@ void Board::PrintBoard() const
 			}
 			bool flipColor = ((i + j) % 2 == 0);
 			wchar_t PieceType_symbol = VisualUtils::GetPieceRepresentation(piece->getColor(), piece->getType(), flipColor);
-			if (piece->getType() == PieceType::KING && IsCheck(piece->getColor()))
+			if (piece->getType() == PieceType::KING && IsInCheck(piece->getColor()))
 			{
 				PieceType_symbol = L'\u265A';
 				RedColor(piece->getColor());
@@ -269,12 +269,12 @@ void Board::Move(const Coordinate source, const singleMove move, bool realMove) 
 	}
 }
 
-bool Board::IsCheck(const Color color) const
+bool Board::IsInCheck(const Color color) const
 {
-	return IsCheck(color, kings_locations[color]);
+	return IsInCheck(color, kings_locations[color]);
 }
 
-bool Board::IsCheck(const Color color, Coordinate king_location) const
+bool Board::IsInCheck(const Color color, Coordinate king_location) const
 {
 	// function answers: is the given color in check?
 	singleMove captureKing;
@@ -306,21 +306,21 @@ bool Board::WillCauseCheck(const Color color, const Coordinate source, const sin
 {
 	Board copy_board(*this);
 	copy_board.Move(source, move, false);
-	return copy_board.IsCheck(color);
+	return copy_board.IsInCheck(color);
 }
 
-bool Board::isCheckmate(Color color)
+bool Board::isCheckmated(Color color)
 {
-	if (IsCheck(color) && !LegalMoveExists(color))
+	if (IsInCheck(color) && !LegalMoveExists(color))
 	{
 		return true;
 	}
 	return false;
 }
 
-bool Board::isStalemate(Color color)
+bool Board::isStalemated(Color color)
 {
-	if (!IsCheck(color) && !LegalMoveExists(color))
+	if (!IsInCheck(color) && !LegalMoveExists(color))
 	{
 		return true;
 	}
@@ -329,13 +329,81 @@ bool Board::isStalemate(Color color)
 
 bool Board::ThreeFoldRepetition()
 {
+	//for (auto it = repetitionCount.begin(); it != repetitionCount.end(); ++it) // 'auto' determines the variable type
+	//{
+	//}
+		if (repetitionCount.find(3) != repetitionCount.end())
+		{
+			return true;
+		}
 	return false;
 }
 void Board::UpdateHashMap()
 {
+	std::wstring hash = L"";
+	size_t emptySquaresCounter = 0;
+	for (uint8_t i = 0; i != 8; ++i)
+	{
+		for (uint8_t j = 0; j != 8; ++j)
+		{
+			if (board[i][j] == nullptr)
+			{
+				emptySquaresCounter += 1;
+				continue;
+			}
+			if (emptySquaresCounter != 0)
+			{
+				hash += std::to_wstring(emptySquaresCounter);
+				emptySquaresCounter = 0;
+			}
+
+			char letter;
+				switch (board[i][j]->getType()) //add non-empty squares
+				{
+				case KING:
+					letter = 'K';
+					break;
+				case QUEEN:
+					letter = 'Q';
+					break;
+				case ROCK:
+					letter = 'R';
+					break;
+				case BISHOP:
+					letter = 'B';
+					break;
+				case KNIGHT:
+					letter = 'N';
+					break;
+				case PAWN:
+					letter = 'P';
+				}
+				if (board[i][j]->getColor() == BLACK)
+				{
+					letter += 'a' - 'A';
+				}
+				hash += letter;			
+		}
+	}
+	if (emptySquaresCounter != 0) // if board ends with an empty square
+	{
+		hash += std::to_wstring(emptySquaresCounter);
+	}
+	GameInfo::WhiteToPlay ? hash += '1' : hash += '0';
+
+	GameInfo::whiteKingMoved ? hash += '1' : hash += '0'; // only need to identify if balck & white can castle, and to witch side. dont care if a rock has moved if the king had already done so. (positive: castling rights effected from the rest of the game pieces [such as king is in check) are already in the rest of the hash])
+	GameInfo::a1WhiteRockMoved ? hash += '1' : hash += '0'; // so build a function to return a value from 0 to 7, also move other things into functions
+	GameInfo::a8WhiteRockMoved ? hash += '1' : hash += '0';
+	GameInfo::blackKingMoved ? hash += '1' : hash += '0';
+	GameInfo::h1BlackRockMoved ? hash += '1' : hash += '0';
+	GameInfo::h8BlackRockMoved ? hash += '1' : hash += '0';
+
+	//(en passant - delete from map on the spot when posiible to move this way?)
+	//check if hash exists, then update relavent info
 }
 void Board::ClearHashMap()
 {
+	repetitionCount.clear();
 }
 
 

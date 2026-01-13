@@ -10,7 +10,7 @@ class Board
 {
 private:
 	std::vector<Coordinate> kings_locations;
-	std::map<std::wstring, std::uint8_t> threeFoldMap; //map to count the number of position repititions
+	std::map<int, std::wstring> repetitionCount; //map to count the number of position repititions
 
 	Board(const Board& other);
 	bool shouldCoronate(singleMove move);
@@ -19,8 +19,8 @@ public:
 	array2D board;
 	static array2D GetToInitialState();
 
-	bool isCheckmate(Color color);
-	bool isStalemate(Color color);
+	bool isCheckmated(Color color);
+	bool isStalemated(Color color);
 	bool ThreeFoldRepetition();
 	void UpdateHashMap();
 	void ClearHashMap();
@@ -35,8 +35,8 @@ public:
 	Piece* const operator[](Coordinate position) const;
 	void PrintBoard() const;
 	void Move(const Coordinate source, const singleMove move, bool realMove);
-	bool IsCheck(const Color color) const;
-	bool IsCheck(const Color color, Coordinate sqr) const;
+	bool IsInCheck(const Color color) const;
+	bool IsInCheck(const Color color, Coordinate sqr) const;
 	bool WillCauseCheck(const Color color, const Coordinate source, const singleMove move) const;
 	bool LegalMoveExists(Color color);
 	bool PieceHasLegalMoves(Piece* piece);

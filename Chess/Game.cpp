@@ -26,7 +26,7 @@ void Game::Start()
 				color = BLACK;
 			}
 
-			if (board.isCheckmate(color))
+			if (board.isCheckmated(color))
 			{
 				std::wcout << (GameInfo::WhiteToPlay ? L"0-1\n" : L"1-0\n") << L"Checkmate, " << (GameInfo::WhiteToPlay ? L"black " : L"white ") << L"wins!\n";
 			}
@@ -149,7 +149,7 @@ std::vector<Piece*> Game::GetPossiblePiecesToMove(const singleMove move)
 	{
 		if (board.WillCauseCheck(colorToPlay, (*it)->getPosition(), move))
 		{
-			last_relevant_move_error = board.IsCheck(colorToPlay) ? ErrorCode::YouAreInCheck : ErrorCode::IllegalCheckExposure;
+			last_relevant_move_error = board.IsInCheck(colorToPlay) ? ErrorCode::YouAreInCheck : ErrorCode::IllegalCheckExposure;
 		}
 		else
 		{
@@ -161,7 +161,7 @@ std::vector<Piece*> Game::GetPossiblePiecesToMove(const singleMove move)
 
 bool Game::GameHasEnded()
 {
-	// before move - check if game ended with mate/stalemate/treefold repitition/50-move rule/draw offer/surrender/insufficient material
+	// add threefold repitition/draw offer/surrender/insufficient material
 	if (GameInfo::numberOfMovesFor50MoveRule > 100)
 	{
 		return true;
