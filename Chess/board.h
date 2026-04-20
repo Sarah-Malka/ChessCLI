@@ -10,7 +10,7 @@ class Board
 {
 private:
 	std::vector<Coordinate> kings_locations;
-	std::map<int, std::wstring> repetitionCount; //map to count the number of position repititions
+	std::map<std::wstring, int> repetitionCount; //map to count the number of position repititions
 
 	Board(const Board& other);
 	bool shouldCoronate(singleMove move);

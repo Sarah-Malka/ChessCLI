@@ -6,6 +6,7 @@
 
 void Game::Start()
 {
+	board.UpdateHashMap();
 	while (true)
 	{
 		if (!invalid_input)
@@ -161,7 +162,9 @@ std::vector<Piece*> Game::GetPossiblePiecesToMove(const singleMove move)
 
 bool Game::GameHasEnded()
 {
+	//TODO
 	// add threefold repitition/draw offer/surrender/insufficient material
+
 	if (GameInfo::numberOfMovesFor50MoveRule > 100)
 	{
 		return true;

@@ -329,13 +329,13 @@ bool Board::isStalemated(Color color)
 
 bool Board::ThreeFoldRepetition()
 {
-	//for (auto it = repetitionCount.begin(); it != repetitionCount.end(); ++it) // 'auto' determines the variable type
-	//{
-	//}
-		if (repetitionCount.find(3) != repetitionCount.end())
+	for (auto iterator = repetitionCount.begin(); iterator != repetitionCount.end(); ++iterator) // 'auto' determines the variable type
+	{
+		if (iterator->second == 3)
 		{
 			return true;
 		}
+	}
 	return false;
 }
 void Board::UpdateHashMap()
@@ -358,31 +358,31 @@ void Board::UpdateHashMap()
 			}
 
 			char letter;
-				switch (board[i][j]->getType()) //add non-empty squares
-				{
-				case KING:
-					letter = 'K';
-					break;
-				case QUEEN:
-					letter = 'Q';
-					break;
-				case ROCK:
-					letter = 'R';
-					break;
-				case BISHOP:
-					letter = 'B';
-					break;
-				case KNIGHT:
-					letter = 'N';
-					break;
-				case PAWN:
-					letter = 'P';
-				}
-				if (board[i][j]->getColor() == BLACK)
-				{
-					letter += 'a' - 'A';
-				}
-				hash += letter;			
+			switch (board[i][j]->getType()) //add non-empty squares
+			{
+			case KING:
+				letter = 'K';
+				break;
+			case QUEEN:
+				letter = 'Q';
+				break;
+			case ROCK:
+				letter = 'R';
+				break;
+			case BISHOP:
+				letter = 'B';
+				break;
+			case KNIGHT:
+				letter = 'N';
+				break;
+			case PAWN:
+				letter = 'P';
+			}
+			if (board[i][j]->getColor() == BLACK)
+			{
+				letter += 'a' - 'A';
+			}
+			hash += letter;
 		}
 	}
 	if (emptySquaresCounter != 0) // if board ends with an empty square
@@ -398,9 +398,22 @@ void Board::UpdateHashMap()
 	GameInfo::h1BlackRockMoved ? hash += '1' : hash += '0';
 	GameInfo::h8BlackRockMoved ? hash += '1' : hash += '0';
 
-	//(en passant - delete from map on the spot when posiible to move this way?)
+	//TODO
+	//(en passant - delete from map on the spot when possible to move this way?)
 	//check if hash exists, then update relavent info
+
+
+	auto iterator = repetitionCount.find(hash);
+	if (iterator != repetitionCount.end())
+	{
+		repetitionCount[hash] += 1; // it's an int increment y'all!
+	}
+	else
+	{
+		repetitionCount[hash] = 1; // create a new entry
+	}
 }
+
 void Board::ClearHashMap()
 {
 	repetitionCount.clear();
