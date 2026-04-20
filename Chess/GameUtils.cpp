@@ -163,7 +163,7 @@ singleMove GameUtils::stringToMove(std::wstring move)
 
 
 		// handle player telling us what origin piece is moving
-		if (move.length() > 2)
+		if (move.length() > 0)
 		{
 			if (move[0] >= L'a' && move[0] <= L'h')
 			{
