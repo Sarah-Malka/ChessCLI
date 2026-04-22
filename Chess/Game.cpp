@@ -166,7 +166,7 @@ std::vector<Piece*> Game::GetPossiblePiecesToMove(const singleMove move)
 bool Game::GameHasEnded()
 {
 	//TODO
-	// add threefold repitition/draw offer/surrender/insufficient material
+	// draw offer/surrender/insufficient material
 
 	if (GameInfo::numberOfMovesFor50MoveRule > 100)
 	{
@@ -189,85 +189,45 @@ bool Game::GameHasEnded()
 
 bool Game::EnPassantPrivilegesExists()
 {
-	Color ColorDoingTheEnPassant = Color::WHITE;
-	if (GameInfo::WhiteToPlay)
-	{
-		ColorDoingTheEnPassant = Color::BLACK;
-	}
+	const int rowOffset = GameInfo::WhiteToPlay ? +1 : -1;
+	Color ColorDoingTheEnPassant = GameInfo::WhiteToPlay ? Color::BLACK : Color::WHITE;
+
 	Coordinate skippedSquare = GameInfo::pawnSkippedThisSquareLastTurn;
-	Coordinate OutOfRange	= { GameInfo::outOfBoardRange, GameInfo::outOfBoardRange };
+	Coordinate OutOfRange = { GameInfo::outOfBoardRange, GameInfo::outOfBoardRange };
 	if (skippedSquare == OutOfRange)
 	{
 		return false;
 	}
-	
-	if (GameInfo::WhiteToPlay) // a white pawn has double moved
+
+	if (skippedSquare.collumn < 7)
 	{
-		if (skippedSquare.collumn < 7)
+		Piece* capturingPiece = board[skippedSquare.row + rowOffset][skippedSquare.collumn + 1];
+		if (capturingPiece != nullptr
+			&& capturingPiece->getType() == PieceType::PAWN
+			&& capturingPiece->getColor() == ColorDoingTheEnPassant)
 		{
-			Piece* capturingPiece = board[skippedSquare.row + 1][skippedSquare.collumn + 1];
-			if (capturingPiece != nullptr
-				&& capturingPiece->getType() == PieceType::PAWN
-				&& capturingPiece->getColor() == Color::BLACK)
-			{
-				Coordinate EnPassantOriginSquare = { skippedSquare.row + 1,skippedSquare.collumn + 1 };
-				singleMove Capture = { OutOfRange, skippedSquare, PieceType::PAWN, PieceType::INVALID, false };
+			Coordinate EnPassantOriginSquare = { skippedSquare.row + rowOffset,skippedSquare.collumn + 1 };
+			singleMove Capture = { OutOfRange, skippedSquare, PieceType::PAWN, PieceType::INVALID, false };
 
-				if (!board.WillCauseCheck(ColorDoingTheEnPassant, EnPassantOriginSquare, Capture))
-				{
-					return true;
-				}
-			}
-		}
-		if (GameInfo::pawnSkippedThisSquareLastTurn.collumn > 0)
-		{
-			Piece* capturingPiece = board[skippedSquare.row + 1][skippedSquare.collumn - 1];
-			if (capturingPiece != nullptr
-				&& capturingPiece->getType() == PieceType::PAWN
-				&& capturingPiece->getColor() == Color::BLACK)
+			if (!board.WillCauseCheck(ColorDoingTheEnPassant, EnPassantOriginSquare, Capture))
 			{
-				Coordinate EnPassantOriginSquare = { skippedSquare.row + 1,skippedSquare.collumn - 1 };
-				singleMove Capture = { OutOfRange, skippedSquare, PieceType::PAWN, PieceType::INVALID, false };
-
-				if (!board.WillCauseCheck(ColorDoingTheEnPassant, EnPassantOriginSquare, Capture))
-				{
-					return true;
-				}
+				return true;
 			}
 		}
 	}
-	else 
+	if (GameInfo::pawnSkippedThisSquareLastTurn.collumn > 0)
 	{
-		if (skippedSquare.collumn < 7)
+		Piece* capturingPiece = board[skippedSquare.row + rowOffset][skippedSquare.collumn - 1];
+		if (capturingPiece != nullptr
+			&& capturingPiece->getType() == PieceType::PAWN
+			&& capturingPiece->getColor() == ColorDoingTheEnPassant)
 		{
-			Piece* capturingPiece = board[skippedSquare.row - 1][skippedSquare.collumn + 1];
-			if (capturingPiece != nullptr
-				&& capturingPiece->getType() == PieceType::PAWN
-				&& capturingPiece->getColor() == Color::WHITE)
-			{
-				Coordinate EnPassantOriginSquare = { skippedSquare.row - 1,skippedSquare.collumn + 1 };
-				singleMove Capture = { OutOfRange, skippedSquare, PieceType::PAWN, PieceType::INVALID, false };
+			Coordinate EnPassantOriginSquare = { skippedSquare.row + rowOffset,skippedSquare.collumn - 1 };
+			singleMove Capture = { OutOfRange, skippedSquare, PieceType::PAWN, PieceType::INVALID, false };
 
-				if (!board.WillCauseCheck(ColorDoingTheEnPassant, EnPassantOriginSquare, Capture))
-				{
-					return true;
-				}
-			}
-		}
-		if (GameInfo::pawnSkippedThisSquareLastTurn.collumn > 0)
-		{
-			Piece* capturingPiece = board[skippedSquare.row - 1][skippedSquare.collumn - 1];
-			if (capturingPiece != nullptr
-				&& capturingPiece->getType() == PieceType::PAWN
-				&& capturingPiece->getColor() == Color::WHITE)
+			if (!board.WillCauseCheck(ColorDoingTheEnPassant, EnPassantOriginSquare, Capture))
 			{
-				Coordinate EnPassantOriginSquare = { skippedSquare.row - 1,skippedSquare.collumn - 1 };
-				singleMove Capture = { OutOfRange, skippedSquare, PieceType::PAWN, PieceType::INVALID, false };
-
-				if (!board.WillCauseCheck(ColorDoingTheEnPassant, EnPassantOriginSquare, Capture))
-				{
-					return true;
-				}
+				return true;
 			}
 		}
 	}
