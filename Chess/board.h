@@ -22,7 +22,7 @@ public:
 	bool isCheckmated(Color color);
 	bool isStalemated(Color color);
 	bool ThreeFoldRepetition();
-	void UpdateHashMap();
+	void AppendCurrentStateToHashMap();
 	void ClearHashMap();
 
 public:

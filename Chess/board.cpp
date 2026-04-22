@@ -338,7 +338,7 @@ bool Board::ThreeFoldRepetition()
 	}
 	return false;
 }
-void Board::UpdateHashMap()
+void Board::AppendCurrentStateToHashMap()
 {
 	std::wstring hash = L"";
 	size_t emptySquaresCounter = 0;
@@ -397,10 +397,6 @@ void Board::UpdateHashMap()
 	GameInfo::blackKingMoved ? hash += '1' : hash += '0';
 	GameInfo::h1BlackRockMoved ? hash += '1' : hash += '0';
 	GameInfo::h8BlackRockMoved ? hash += '1' : hash += '0';
-
-	//TODO
-	//(en passant - delete from map on the spot when possible to move this way?)
-	//check if hash exists, then update relavent info
 
 
 	auto iterator = repetitionCount.find(hash);

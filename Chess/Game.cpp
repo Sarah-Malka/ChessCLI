@@ -6,7 +6,7 @@
 
 void Game::Start()
 {
-	board.UpdateHashMap();
+	board.AppendCurrentStateToHashMap();
 	while (true)
 	{
 		if (!invalid_input)
@@ -67,15 +67,18 @@ void Game::Start()
 			GameUtils::GameSound(GameInfo::atelastMove);
 			Sleep(130);
 			invalid_input = false;
-			GameInfo::WhiteToPlay = !GameInfo::WhiteToPlay;
 			GameInfo::numberOfMovesFor50MoveRule += 1;
 
 			if (GameInfo::atelastMove || move.originalPiece == PAWN)
 			{
 				board.ClearHashMap();
 			}
-			board.UpdateHashMap();
+			if (!EnPassantPrivilegesExists())
+			{
+				board.AppendCurrentStateToHashMap();
+			}
 
+			GameInfo::WhiteToPlay = !GameInfo::WhiteToPlay; // has to go after the hash updater
 		}
 		catch (Exception ex)
 		{
@@ -182,4 +185,92 @@ bool Game::GameHasEnded()
 	}
 	
 	return true;
+}
+
+bool Game::EnPassantPrivilegesExists()
+{
+	Color ColorDoingTheEnPassant = Color::WHITE;
+	if (GameInfo::WhiteToPlay)
+	{
+		ColorDoingTheEnPassant = Color::BLACK;
+	}
+	Coordinate skippedSquare = GameInfo::pawnSkippedThisSquareLastTurn;
+	Coordinate OutOfRange	= { GameInfo::outOfBoardRange, GameInfo::outOfBoardRange };
+	if (skippedSquare == OutOfRange)
+	{
+		return false;
+	}
+	
+	if (GameInfo::WhiteToPlay) // a white pawn has double moved
+	{
+		if (skippedSquare.collumn < 7)
+		{
+			Piece* capturingPiece = board[skippedSquare.row + 1][skippedSquare.collumn + 1];
+			if (capturingPiece != nullptr
+				&& capturingPiece->getType() == PieceType::PAWN
+				&& capturingPiece->getColor() == Color::BLACK)
+			{
+				Coordinate EnPassantOriginSquare = { skippedSquare.row + 1,skippedSquare.collumn + 1 };
+				singleMove Capture = { OutOfRange, skippedSquare, PieceType::PAWN, PieceType::INVALID, false };
+
+				if (!board.WillCauseCheck(ColorDoingTheEnPassant, EnPassantOriginSquare, Capture))
+				{
+					return true;
+				}
+			}
+		}
+		if (GameInfo::pawnSkippedThisSquareLastTurn.collumn > 0)
+		{
+			Piece* capturingPiece = board[skippedSquare.row + 1][skippedSquare.collumn - 1];
+			if (capturingPiece != nullptr
+				&& capturingPiece->getType() == PieceType::PAWN
+				&& capturingPiece->getColor() == Color::BLACK)
+			{
+				Coordinate EnPassantOriginSquare = { skippedSquare.row + 1,skippedSquare.collumn - 1 };
+				singleMove Capture = { OutOfRange, skippedSquare, PieceType::PAWN, PieceType::INVALID, false };
+
+				if (!board.WillCauseCheck(ColorDoingTheEnPassant, EnPassantOriginSquare, Capture))
+				{
+					return true;
+				}
+			}
+		}
+	}
+	else 
+	{
+		if (skippedSquare.collumn < 7)
+		{
+			Piece* capturingPiece = board[skippedSquare.row - 1][skippedSquare.collumn + 1];
+			if (capturingPiece != nullptr
+				&& capturingPiece->getType() == PieceType::PAWN
+				&& capturingPiece->getColor() == Color::WHITE)
+			{
+				Coordinate EnPassantOriginSquare = { skippedSquare.row - 1,skippedSquare.collumn + 1 };
+				singleMove Capture = { OutOfRange, skippedSquare, PieceType::PAWN, PieceType::INVALID, false };
+
+				if (!board.WillCauseCheck(ColorDoingTheEnPassant, EnPassantOriginSquare, Capture))
+				{
+					return true;
+				}
+			}
+		}
+		if (GameInfo::pawnSkippedThisSquareLastTurn.collumn > 0)
+		{
+			Piece* capturingPiece = board[skippedSquare.row - 1][skippedSquare.collumn - 1];
+			if (capturingPiece != nullptr
+				&& capturingPiece->getType() == PieceType::PAWN
+				&& capturingPiece->getColor() == Color::WHITE)
+			{
+				Coordinate EnPassantOriginSquare = { skippedSquare.row - 1,skippedSquare.collumn - 1 };
+				singleMove Capture = { OutOfRange, skippedSquare, PieceType::PAWN, PieceType::INVALID, false };
+
+				if (!board.WillCauseCheck(ColorDoingTheEnPassant, EnPassantOriginSquare, Capture))
+				{
+					return true;
+				}
+			}
+		}
+	}
+
+	return false;
 }
