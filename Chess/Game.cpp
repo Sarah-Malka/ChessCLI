@@ -7,6 +7,7 @@
 void Game::Start()
 {
 	board.AppendCurrentStateToHashMap();
+
 	while (true)
 	{
 		if (!invalid_input)
@@ -17,6 +18,7 @@ void Game::Start()
 		if (GameInfo::atelastMove)
 		{
 			GameInfo::numberOfMovesFor50MoveRule = 0;
+			GameInfo::number_of_pieces_on_board -= 1;
 		}
 
 		if (GameHasEnded())
@@ -166,7 +168,7 @@ std::vector<Piece*> Game::GetPossiblePiecesToMove(const singleMove move)
 bool Game::GameHasEnded()
 {
 	//TODO
-	// draw offer/surrender/insufficient material
+	// draw offer/surrender
 
 	if (GameInfo::numberOfMovesFor50MoveRule > 100)
 	{
@@ -178,13 +180,18 @@ bool Game::GameHasEnded()
 		return true;
 	}
 
-	Color color = GameInfo::WhiteToPlay ? Color::WHITE : Color::BLACK;
-	if (board.LegalMoveExists(color))
+	if (board.InsufficientMaterial())
 	{
-		return false;
+		return true;
+	}
+
+	Color color = GameInfo::WhiteToPlay ? Color::WHITE : Color::BLACK;
+	if (!board.LegalMoveExists(color))
+	{
+		return true;
 	}
 	
-	return true;
+	return false;
 }
 
 bool Game::EnPassantPrivilegesExists()

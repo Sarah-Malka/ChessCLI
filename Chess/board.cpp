@@ -338,6 +338,7 @@ bool Board::ThreeFoldRepetition()
 	}
 	return false;
 }
+
 void Board::AppendCurrentStateToHashMap()
 {
 	std::wstring hash = L"";
@@ -415,6 +416,60 @@ void Board::ClearHashMap()
 	repetitionCount.clear();
 }
 
+bool Board::InsufficientMaterial()
+{
+	if (GameInfo::number_of_pieces_on_board > 4)
+	{
+		return false;
+	}
+
+	Piece* first_non_king_piece = nullptr;
+	Piece* second_non_king_piece = nullptr;
+
+	for (uint8_t i = 0; i < 8; i++)
+	{
+		for (uint8_t j = 0; j < 8; j++)
+		{
+			Piece* piece = board[i][j];
+			if (piece == nullptr)
+			{
+				continue;
+			}
+			else
+			{
+				if (piece->getType() != PieceType::KING && piece->getType() != PieceType::BISHOP && piece->getType() != PieceType::KNIGHT)
+				{
+					return false; // not draw if other pieces exist
+				}
+				if (piece->getType() != PieceType::KING && first_non_king_piece == nullptr)
+				{
+					first_non_king_piece = piece; // get first piece
+					continue;
+				}
+				if (piece->getType() != PieceType::KING)
+				{
+					second_non_king_piece = piece; // get second piece
+				}
+			}
+		}
+	}
+	if (GameInfo::number_of_pieces_on_board < 4)
+	{
+		return true; // K vs K, KB vs K, KN vs K
+	}
+	if ( (first_non_king_piece->getType() == second_non_king_piece->getType() == PieceType::BISHOP )
+		&& first_non_king_piece->getColor() != second_non_king_piece->getColor() )
+	{
+		bool black_or_white_a = (first_non_king_piece->getPosition().collumn - first_non_king_piece->getPosition().row) % 2;
+		bool black_or_white_b = (second_non_king_piece->getPosition().collumn - second_non_king_piece->getPosition().row) % 2;
+		
+		if (black_or_white_a == black_or_white_b)
+		{
+			return true; // both are Bishops and on enemy teams and on same color
+		}
+	}
+	return false;
+}
 
 Board::Board(const Board& other) // copy constructor
 	: kings_locations(other.kings_locations)

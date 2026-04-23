@@ -7,6 +7,7 @@ public:
 	static bool WhiteToPlay;
 
 	static bool atelastMove;
+	static uint8_t number_of_pieces_on_board;
 
 	static bool whiteKingMoved;
 	static bool a1WhiteRockMoved;

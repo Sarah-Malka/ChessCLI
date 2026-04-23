@@ -24,6 +24,7 @@ public:
 	bool ThreeFoldRepetition();
 	void AppendCurrentStateToHashMap();
 	void ClearHashMap();
+	bool InsufficientMaterial();
 
 public:
 	Board();
