@@ -10,15 +10,15 @@ void Game::Start()
 
 	while (true)
 	{
-		if (!invalid_input)
+		if (!invalid_move)
 		{
 			board.PrintBoard();
-		}
-
-		if (GameInfo::atelastMove)
-		{
-			GameInfo::numberOfMovesFor50MoveRule = 0;
-			GameInfo::number_of_pieces_on_board -= 1;
+			
+			if (GameInfo::atelastMove)
+			{
+				GameInfo::numberOfMovesFor50MoveRule = 0;
+				GameInfo::number_of_pieces_on_board -= 1;
+			}
 		}
 
 		if (GameHasEnded())
@@ -68,7 +68,7 @@ void Game::Start()
 			board.Move(pieceToMove->getPosition(), move, true); // the actual moving
 			GameUtils::GameSound(GameInfo::atelastMove);
 			Sleep(130);
-			invalid_input = false;
+			invalid_move = false;
 			GameInfo::numberOfMovesFor50MoveRule += 1;
 
 			if (GameInfo::atelastMove || move.originalPiece == PAWN)
@@ -84,7 +84,7 @@ void Game::Start()
 		}
 		catch (Exception ex)
 		{
-			invalid_input = true;
+			invalid_move = true;
 			std::wcout << L"ErrorCode " << (int)ex.GetError() << L": " << errorCodeToMessage.at(ex.GetError()) << std::endl;
 			continue;
 		}

@@ -457,7 +457,8 @@ bool Board::InsufficientMaterial()
 	{
 		return true; // K vs K, KB vs K, KN vs K
 	}
-	if ( (first_non_king_piece->getType() == second_non_king_piece->getType() == PieceType::BISHOP )
+	if ( first_non_king_piece->getType() ==  PieceType::BISHOP
+		&& second_non_king_piece->getType() == PieceType::BISHOP
 		&& first_non_king_piece->getColor() != second_non_king_piece->getColor() )
 	{
 		bool black_or_white_a = (first_non_king_piece->getPosition().collumn - first_non_king_piece->getPosition().row) % 2;
