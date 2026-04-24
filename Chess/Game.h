@@ -9,7 +9,7 @@ private:
 	bool invalid_move = false;
 	ErrorCode last_relevant_move_error = ErrorCode::Success;
 	std::vector<Piece*> GetPossiblePiecesToMove(const singleMove move);
-	bool GameHasEnded();
+	EndGameType GameHasEnded();
 	bool EnPassantPrivilegesExists();
 
 public:

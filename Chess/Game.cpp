@@ -21,21 +21,18 @@ void Game::Start()
 			}
 		}
 
-		if (GameHasEnded())
+		EndGameType gameHasEnded = GameHasEnded();
+		if (gameHasEnded != EndGameType::NOT_ENDED)
 		{
-			Color color = WHITE;
-			if (GameInfo::WhiteToPlay == false)
-			{
-				color = BLACK;
-			}
+			Color color = GameInfo::WhiteToPlay? WHITE : color = BLACK;
 
-			if (board.isCheckmated(color))
+			if (gameHasEnded == EndGameType::CHECKMATE)
 			{
 				std::wcout << (GameInfo::WhiteToPlay ? L"0-1\n" : L"1-0\n") << L"Checkmate, " << (GameInfo::WhiteToPlay ? L"black " : L"white ") << L"wins!\n";
 			}
 			else
 			{
-				std::wcout << L'\u00BD' << L"-" << L'\u00BD' << L"\nDraw!\n";
+				std::wcout << L'\u00BD' << L"-" << L'\u00BD' << L"\nDraw! Reason: " << endGameTypeToMessage.at(gameHasEnded) << std::endl;
 			}
 			break;
 		}
@@ -165,33 +162,38 @@ std::vector<Piece*> Game::GetPossiblePiecesToMove(const singleMove move)
 	return possiblePieces;
 }
 
-bool Game::GameHasEnded()
+EndGameType Game::GameHasEnded()
 {
 	//TODO
 	// draw offer/surrender
 
 	if (GameInfo::numberOfMovesFor50MoveRule > 100)
 	{
-		return true;
+		return EndGameType::FIFTY_MOVES;
 	}
 
 	if (board.ThreeFoldRepetition())
 	{
-		return true;
+		return EndGameType::THREE_FOLD_REPETITION;
 	}
 
 	if (board.InsufficientMaterial())
 	{
-		return true;
+		return EndGameType::INSUFICIENT_MATERIAL;
 	}
 
 	Color color = GameInfo::WhiteToPlay ? Color::WHITE : Color::BLACK;
+	if (board.isCheckmated(color))
+	{
+		return EndGameType::CHECKMATE;
+	}
+
 	if (!board.LegalMoveExists(color))
 	{
-		return true;
+		return EndGameType::STALEMATE;
 	}
-	
-	return false;
+
+	return EndGameType::NOT_ENDED;
 }
 
 bool Game::EnPassantPrivilegesExists()
