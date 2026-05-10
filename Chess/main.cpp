@@ -3,11 +3,15 @@
 #include <locale>
 #include <cstdlib>
 #include "gameUtils.h"
+#include <windows.h>
 
-int main()
+int WINAPI WinMain(
+    HINSTANCE hInstance,
+    HINSTANCE hPrevInstance,
+    LPSTR lpCmdLine,
+    int nCmdShow)
 {
-    system("chcp 65001 > nul");
-    setlocale(LC_ALL, ".UTF-8");
+    MessageBoxA(NULL, "Hello", "Test", MB_OK);
 
     Game game;
     game.Start();
